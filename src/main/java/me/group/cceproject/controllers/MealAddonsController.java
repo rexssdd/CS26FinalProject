@@ -252,28 +252,36 @@ public class MealAddonsController {
     @FXML
     private void AddtoOrderClicked(MouseEvent event) {
         try {
+            // Retrieve selected addon and calculate final price
             String selectedAddon = getSelectedAddon();
             double basePrice = extractPrice(PizzaPrice.getText());
             double finalPrice = calculateFinalPrice(basePrice, selectedSize, selectedAddon);
-            String completepizzaName = String.format("%s", PizzaName.getText());
-            String selecteddrink = String.format("%s", selectedDrink);
+
+            // Get inputs for pizza, drink, and addon details
+            String completepizzaName = PizzaName.getText();
+            String selectedDrink = this.selectedDrink;
             int drinkQty = Integer.parseInt(drinksQtyNumber.getText().trim());
-            String addon = String.format("%s", selectedAddon);
+            String addon = selectedAddon;
             int addonQty = Integer.parseInt(QuantityNumber.getText().trim());
             String formattedPrice = String.format("₱ %.2f", finalPrice);
             int quantity = Integer.parseInt(pizzaQtyNumber.getText().trim());
 
-            if (quantity < 1) {
-                return;
-            }
-            if (drinkQty < 1){
-                return;
-            }
-            if (addonQty < 1){
-                return;
+
+            if (quantity < 1 || drinkQty < 1 || addonQty < 1) {
+                return; // Exit if any quantity is invalid
             }
 
-            OrderMenuController.addOrderItem(completepizzaName, quantity, selecteddrink, drinkQty, addon,addonQty, formattedPrice, foodCode);
+            OrderMenuController.addOrderItem(
+                    completepizzaName,
+                    quantity,
+                    selectedDrink,
+                    drinkQty,
+                    addon,
+                    addonQty,
+                    formattedPrice,
+                    foodCode
+            );
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/me/group/cceproject/OrderMenu.fxml"));
             Parent orderMenuRoot = loader.load();
             OrderMenuController controller = loader.getController();
@@ -288,6 +296,7 @@ public class MealAddonsController {
             e.printStackTrace();
         }
     }
+
 
     private String getSelectedAddon() {
         if (ChocolateFudgePane.getStyle().contains("DB383D")) return "Chocolate Fudge";

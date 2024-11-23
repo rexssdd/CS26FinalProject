@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class OrderItem {
+
     private final SimpleStringProperty pizzaName;
     private final SimpleIntegerProperty pizzaQuantity;
     private final SimpleStringProperty drinkName;
@@ -30,7 +31,10 @@ public class OrderItem {
     public String getPizzaPrice() { return totalPrice.get(); }
     public String getFoodCode() { return foodCode.get(); }
     public int getPizzaQuantity() { return pizzaQuantity.get(); }
-
+public int getDrinkQuantity() { return drinkQuantity.get(); }
+    public int getAddonsQuantity() { return addonsQuantity.get(); }
+    public String getAddonsName() { return addonsName.get(); }
+    public String getDrinkName() { return drinkName.get(); }
     // Setters
     public void setPizzaName(String pizzaName) {
         this.pizzaName.set(pizzaName);
@@ -45,7 +49,7 @@ public class OrderItem {
     }
 
     public void setPizzaQuantity(int quantity) {
-        this.pizzaQuantity.set(quantity);
+            this.pizzaQuantity.set(quantity);
     }
     public void setDrinkQuantity(int quantity) {
         this.drinkQuantity.set(quantity);
@@ -59,4 +63,8 @@ public class OrderItem {
     public SimpleStringProperty pizzaPriceProperty() { return totalPrice; }
     public SimpleStringProperty foodCodeProperty() { return foodCode; }
     public SimpleIntegerProperty pizzaquantityProperty() { return pizzaQuantity; }
+    public SimpleIntegerProperty drinkquantityProperty() { return drinkQuantity; }
+    public SimpleIntegerProperty addonsquantityProperty() { return addonsQuantity; }
+    public SimpleStringProperty addonsNameProperty() { return addonsName; }
+    public SimpleStringProperty drinkNameProperty() { return drinkName; }
 }

@@ -208,14 +208,14 @@ public class OrderMenuController {
         loadMealAddons(pizzaName, pizzaPrice, imagePath, foodCode, event);
     }
 
-    private void loadMealAddons(String mealName, String mealPrice, String imagePath, String foodCode, MouseEvent event) {
+    private void loadMealAddons(String pizzaName, String pizzaPrice, String imagePath, String foodCode, MouseEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/me/group/cceproject/MealAddons.fxml"));
             Parent mealAddonsRoot = loader.load();
 
             MealAddonsController mealAddonsController = loader.getController();
             // Pass the foodCode along with other details
-            mealAddonsController.setMealDetails(mealName, mealPrice, imagePath, foodCode);
+            mealAddonsController.setMealDetails(pizzaName, pizzaPrice, imagePath, foodCode);
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene mealAddonsScene = new Scene(mealAddonsRoot);
