@@ -28,7 +28,7 @@ public class OrderItem {
 
     // Getters
     public String getPizzaName() { return pizzaName.get(); }
-    public String getPizzaPrice() { return totalPrice.get(); }
+    public String getTotalPrice() { return totalPrice.get(); }
     public String getFoodCode() { return foodCode.get(); }
     public int getPizzaQuantity() { return pizzaQuantity.get(); }
 public int getDrinkQuantity() { return drinkQuantity.get(); }
@@ -57,7 +57,12 @@ public int getDrinkQuantity() { return drinkQuantity.get(); }
     public void setAddonsQuantity(int quantity) {
         this.addonsQuantity.set(quantity);
     }
-
+    public void setAddonsName(String addonsName) {
+        this.addonsName.set(addonsName);
+    }
+    public void setDrinkName(String drinkName) {
+        this.drinkName.set(drinkName);
+    }
     // Property getters
     public SimpleStringProperty pizzaNameProperty() { return pizzaName; }
     public SimpleStringProperty pizzaPriceProperty() { return totalPrice; }

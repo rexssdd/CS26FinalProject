@@ -49,7 +49,7 @@ public class CartController {
                 HBox itemContainer = createCartItemContainer(item);
                 cartItemsContainer.getChildren().add(itemContainer);
 
-                String priceStr = item.getPizzaPrice().replaceAll("[^\\d.]", "");
+                String priceStr = item.getTotalPrice().replaceAll("[^\\d.]", "");
                 totalPrice += Double.parseDouble(priceStr);
             }
 
@@ -115,7 +115,7 @@ public class CartController {
         centerSection.getChildren().addAll(nameText, quantityBox);
 
         // Price
-        Text priceText = new Text(item.getPizzaPrice());
+        Text priceText = new Text(item.getTotalPrice());
         priceText.setStyle("-fx-fill: #DB383D; -fx-font-size: 16px;");
 
         // Remove button
@@ -139,10 +139,10 @@ public class CartController {
         return container;
     }
 
-    private String getFoodCode(String mealName) {
+    private String getFoodCode(String PizzaName) {
         // Map meal names to their corresponding codes
-        switch (mealName) {
-            case "Yumburger":
+        switch (PizzaName) {
+            case "Pizza Margherita":
                 return "B1";
             case "Spicy Chicken Wings":
                 return "C1";
@@ -173,7 +173,7 @@ public class CartController {
     private void updateTotalPrice() {
         double total = 0.0;
         for (OrderItem item : OrderMenuController.staticOrderItems) {
-            String priceStr = item.getPizzaPrice().replaceAll("[^\\d.]", "");
+            String priceStr = item.getTotalPrice().replaceAll("[^\\d.]", "");
             double itemPrice = Double.parseDouble(priceStr);
             // Multiply by quantity
             total += itemPrice * item.getPizzaQuantity();

@@ -75,13 +75,19 @@ public class AdminMainController {
     @FXML
     private TableView<OrderItem> OrdersTable;
     @FXML
-    private TableColumn<OrderItem, String> ProductID;
+    private TableColumn<OrderItem, String> BundleId;
     @FXML
-    private TableColumn<OrderItem, String> OrderName;
+    private TableColumn<OrderItem, String> PizzaName;
     @FXML
-    private TableColumn<OrderItem, String> OrderPrice;
+    private TableColumn<OrderItem, String> TotalPrice;
     @FXML
-    private TableColumn<OrderItem, Integer> OrderQuantity;
+    private TableColumn<OrderItem, Integer> PizzaQuantity;
+    @FXML
+    private TableColumn<OrderItem, String> DrinkName;
+    @FXML
+    private TableColumn<OrderItem, Integer> DrinkQuantity;
+    @FXML
+    private TableColumn<OrderItem, String> AddonsName;
 
     private static final String ORDER_FILE = "orders.txt";
 
@@ -99,10 +105,14 @@ public class AdminMainController {
         orderStatusColumn.setCellValueFactory(cellData -> cellData.getValue().orderStatusProperty());
 
         // Set up the order details columns
-        ProductID.setCellValueFactory(cellData -> cellData.getValue().foodCodeProperty());
-        OrderName.setCellValueFactory(cellData -> cellData.getValue().pizzaNameProperty());
-        OrderPrice.setCellValueFactory(cellData -> cellData.getValue().pizzaPriceProperty());
-        OrderQuantity.setCellValueFactory(cellData -> cellData.getValue().pizzaquantityProperty().asObject());
+        BundleId.setCellValueFactory(cellData -> cellData.getValue().foodCodeProperty());
+        PizzaName.setCellValueFactory(cellData -> cellData.getValue().pizzaNameProperty());
+        TotalPrice.setCellValueFactory(cellData -> cellData.getValue().pizzaPriceProperty());
+        PizzaQuantity.setCellValueFactory(cellData -> cellData.getValue().pizzaquantityProperty().asObject());
+//       DrinkName.setCellValueFactory(cellData -> cellData.getValue().drinkNameProperty());
+//       AddonsName.setCellValueFactory(cellData -> cellData.getValue().addonsNameProperty());
+//        DrinkQuantity.setCellValueFactory(cellData -> cellData.getValue().drinkquantityProperty().asObject());
+
 
         orderStatusComboBox.getItems().addAll("Pending", "In Progress", "Completed");
         OrderNumberInput.setOnAction(event -> handleOrderNumberInput());
@@ -143,18 +153,18 @@ public class AdminMainController {
                     currentStack = new Stack<>();
                 }
                 // Parsing food code
-                else if (line.startsWith("Food Code:")) {
+                else if (line.startsWith("Bundle Code:")) {
                     OrderItem item = new OrderItem("", 0, "", 0, "", 0, "", line.substring(10).trim());
                     if (currentStack != null) {
                         currentStack.push(item);  // Add item to stack
                     }
                 }
                 // Parsing meal name (which could include addons or drinks)
-                else if (line.startsWith("Meal Name:") && !currentStack.isEmpty()) {
-                    String mealName = line.substring(10).trim();
+                else if (line.startsWith("Pizza Name:") && !currentStack.isEmpty()) {
+                    String pizzaName = line.substring(10).trim();
 
                     // Continue to append addons/drinks as long as the next lines aren't "Price:" or "Quantity:"
-                    StringBuilder fullMealName = new StringBuilder(mealName);
+                    StringBuilder fullPizzaName = new StringBuilder(pizzaName);
 
                     // Look ahead to check if the next lines are addons/drinks
                     for (int j = i + 1; j < lines.size(); j++) {
@@ -166,11 +176,28 @@ public class AdminMainController {
                             break;
                         }
                         // Otherwise, it's an addon or drink
-                        fullMealName.append("\n").append(nextLine.trim());
+                        fullPizzaName.append("\n").append(nextLine.trim());
+                    }
+                    currentStack.peek().setPizzaName(fullPizzaName.toString().trim());
+                }
+                else if (line.startsWith("Drink Name:") && !currentStack.isEmpty()) {
+                    String drinkName = line.substring(11).trim();
+
+                    StringBuilder fullDrinkName = new StringBuilder(drinkName);
+                    for (int j = i + 1; j < lines.size(); j++) {
+                        String nextLine = lines.get(j).trim();
+
+                        if (nextLine.startsWith("Price:") || nextLine.startsWith("Quantity:") || nextLine.startsWith("Total Price:")) {
+                            i = j - 1;
+                            break;
+                        }
+                        fullDrinkName.append("\n").append(nextLine.trim());
                     }
 
                     // Set the full meal name in the current order item
-                    currentStack.peek().setPizzaName(fullMealName.toString().trim());
+
+                    currentStack.peek().setDrinkName(fullDrinkName.toString().trim());
+
                 }
                 // Parsing price
                 else if (line.startsWith("Price:") && !currentStack.isEmpty()) {
@@ -277,8 +304,8 @@ public class AdminMainController {
                     while (!tempStack.isEmpty()) {
                         OrderItem item = tempStack.pop();
                         writer.write("  Food Code: " + item.getFoodCode() + "\n");
-                        writer.write("  Meal Name: " + item.getPizzaName() + "\n");
-                        writer.write("  Price: " + item.getPizzaPrice() + "\n");
+                        writer.write("  Pizza Name: " + item.getPizzaName() + "\n");
+                        writer.write("  Price: " + item.getTotalPrice() + "\n");
                         writer.write("  Quantity: " + item.getPizzaQuantity() + "\n");
                         orderStack.push(item);
                         originalStack.push(item);
@@ -362,7 +389,7 @@ public class AdminMainController {
         double total = 0.0;
         for (OrderItem item : OrdersTable.getItems()) {
             // Get the numeric value of the meal price, removing any non-numeric characters (like ₱)
-            String priceStr = item.getPizzaPrice().replaceAll("[^\\d.]", "");
+            String priceStr = item.getTotalPrice().replaceAll("[^\\d.]", "");
             double itemPrice = Double.parseDouble(priceStr);
 
             // Calculate the total for this item (price * quantity)
@@ -430,13 +457,18 @@ public class AdminMainController {
         // Loop through the order items and add to receipt
         double totalPrice = 0.0;
         for (OrderItem item : orderStack) {
-            String mealName = item.getPizzaName();
-            double price = Double.parseDouble(item.getPizzaPrice().replaceAll("[^\\d.]", ""));
+            String pizzaName = item.getPizzaName();
             int quantity = item.getPizzaQuantity();
+            String drinkName = item.getDrinkName();
+            int dqty = item.getDrinkQuantity();
+            String addons = item.getAddonsName();
+            int aqty = item.getAddonsQuantity();
+            double price = Double.parseDouble(item.getTotalPrice().replaceAll("[^\\d.]", ""));
+
             double itemTotal = price * quantity;
             totalPrice += itemTotal;
 
-            receiptContent.append(String.format("%-20s %5d x ₱%.2f = ₱%.2f\n", mealName, quantity, price, itemTotal));
+            receiptContent.append(String.format("%-20s %-20s %.2f %-20s %.2f  %5d x ₱%.2f = ₱%.2f\n", pizzaName , drinkName, dqty,addons,aqty, quantity, price, itemTotal));
         }
 
         receiptContent.append("======================================\n");

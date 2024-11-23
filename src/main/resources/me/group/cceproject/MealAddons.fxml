@@ -104,7 +104,7 @@
                   <Font name="System Bold" size="32.0" />
                </font>
             </Text>
-            <AnchorPane fx:id="ChocolateFudgePane" layoutX="14.0" layoutY="47.0" onMouseClicked="#CFClicked" prefHeight="100.0" prefWidth="100.0">
+            <AnchorPane fx:id="CheesePane" layoutX="14.0" layoutY="47.0" onMouseClicked="#CFClicked" prefHeight="100.0" prefWidth="100.0">
                <children>
                   <ImageView fitHeight="78.0" fitWidth="77.0" layoutX="20.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -124,7 +124,7 @@
                </font>
             </Text>
             <TextField fx:id="QuantityNumber" alignment="CENTER" layoutX="520.0" layoutY="10.0" prefHeight="26.0" prefWidth="66.0" style="-fx-border-color: DB383D; -fx-border-radius: 5;" text="1" />
-            <AnchorPane fx:id="ChocolatePiePane" layoutX="120.0" layoutY="47.0" onMouseClicked="#CPClicked" prefHeight="100.0" prefWidth="100.0">
+            <AnchorPane fx:id="MeatPane" layoutX="120.0" layoutY="47.0" onMouseClicked="#CPClicked" prefHeight="100.0" prefWidth="100.0">
                <children>
                   <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -138,7 +138,7 @@
                   </Text>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="RedVelvetPane" layoutX="225.0" layoutY="44.0" onMouseClicked="#RVClicked" prefHeight="100.0" prefWidth="100.0">
+            <AnchorPane fx:id="PepperoniPane" layoutX="225.0" layoutY="44.0" onMouseClicked="#RVClicked" prefHeight="100.0" prefWidth="100.0">
                <children>
                   <ImageView fitHeight="90.0" fitWidth="52.0" layoutX="24.0" pickOnBounds="true" preserveRatio="true">
                      <image>

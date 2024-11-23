@@ -24,11 +24,11 @@ public class MealAddonsController {
     @FXML
     private Pane MtnDewPane;
     @FXML
-    private Pane ChocolateFudgePane;
+    private Pane CheesePane;
     @FXML
-    private Pane ChocolatePiePane;
+    private Pane MeatPane;
     @FXML
-    private Pane RedVelvetPane;
+    private Pane PepperoniPane;
     @FXML
     private Pane NoThanksPane;
 
@@ -191,17 +191,17 @@ public class MealAddonsController {
 
     @FXML
     private void CFClicked(MouseEvent event) {
-        selectAddonPane(ChocolateFudgePane);
+        selectAddonPane(CheesePane);
     }
 
     @FXML
     private void CPClicked(MouseEvent event) {
-        selectAddonPane(ChocolatePiePane);
+        selectAddonPane(MeatPane);
     }
 
     @FXML
     private void RVClicked(MouseEvent event) {
-        selectAddonPane(RedVelvetPane);
+        selectAddonPane(PepperoniPane);
     }
 
     @FXML
@@ -235,9 +235,9 @@ public class MealAddonsController {
     }
 
     private void selectAddonPane(Pane selectedAddonPane) {
-        ChocolateFudgePane.setStyle(defaultPaneStyle);
-        ChocolatePiePane.setStyle(defaultPaneStyle);
-        RedVelvetPane.setStyle(defaultPaneStyle);
+        CheesePane.setStyle(defaultPaneStyle);
+        MeatPane.setStyle(defaultPaneStyle);
+        PepperoniPane.setStyle(defaultPaneStyle);
         NoThanksPane.setStyle(defaultPaneStyle);
         selectedAddonPane.setStyle(selectedPaneStyle);
     }
@@ -299,9 +299,9 @@ public class MealAddonsController {
 
 
     private String getSelectedAddon() {
-        if (ChocolateFudgePane.getStyle().contains("DB383D")) return "Chocolate Fudge";
-        if (ChocolatePiePane.getStyle().contains("DB383D")) return "Chocolate Pie";
-        if (RedVelvetPane.getStyle().contains("DB383D")) return "Red Velvet";
+        if (CheesePane.getStyle().contains("DB383D")) return "Cheese";
+        if (MeatPane.getStyle().contains("DB383D")) return "Meat";
+        if (PepperoniPane.getStyle().contains("DB383D")) return "Pepperoni";
         return "No Thanks";
     }
 
@@ -322,13 +322,13 @@ public class MealAddonsController {
         }
 
         switch (addon) {
-            case "Chocolate Fudge":
+            case "Cheese":
                 finalPrice += 39;
                 break;
-            case "Chocolate Pie":
+            case "Meat":
                 finalPrice += 49;
                 break;
-            case "Red Velvet":
+            case "Pepperoni":
                 finalPrice += 59;
                 break;
         }

@@ -81,7 +81,7 @@ public class EndController {
         int orderNumber = Integer.parseInt(OrderNumber.getText());
         String orderType = OrderMenuController.getOrderType();  // Retrieve the order type (Dine In or Take Out)
         double totalPrice = orderItems.stream()
-                .mapToDouble(item -> Double.parseDouble(item.getPizzaPrice().replaceAll("[^\\d.]", "")) * item.getPizzaQuantity())
+                .mapToDouble(item -> Double.parseDouble(item.getTotalPrice().replaceAll("[^\\d.]", "")) * item.getPizzaQuantity())
                 .sum();
 
         // Using BufferedWriter for efficient writing
@@ -91,11 +91,11 @@ public class EndController {
             writer.write("  Order Type: " + orderType);  // Write the order type (Dine In or Take Out)
             writer.newLine();
             for (OrderItem item : orderItems) {
-                writer.write("  Food Code: " + item.getFoodCode());
+                writer.write("  Bundle Code: " + item.getFoodCode());
                 writer.newLine();
-                writer.write("  Meal Name: " + item.getPizzaName());
+                writer.write("  Pizza Name: " + item.getPizzaName());
                 writer.newLine();
-                writer.write("  Price: " + item.getPizzaPrice());
+                writer.write("  Price: " + item.getTotalPrice());
                 writer.newLine();
                 writer.write("  Quantity: " + item.getPizzaQuantity());
                 writer.newLine();

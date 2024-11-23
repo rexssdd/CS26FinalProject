@@ -89,7 +89,7 @@ public class OrderMenuController {
         // Print current items for debugging
         System.out.println("Current items in table: " + staticOrderItems.size());
         for (OrderItem item : staticOrderItems) {
-            System.out.println("Item: " + item.getPizzaName() + " - " + item.getPizzaPrice());
+            System.out.println("Item: " + item.getPizzaName() + " - " + item.getTotalPrice());
         }
 
         // Add listener to update total price when items change
@@ -121,7 +121,7 @@ public class OrderMenuController {
     private void updateTotalPrice() {
         double total = 0.0;
         for (OrderItem item : staticOrderItems) {
-            String priceStr = item.getPizzaPrice().replaceAll("[^\\d.]", "");
+            String priceStr = item.getTotalPrice().replaceAll("[^\\d.]", "");
             double itemPrice = Double.parseDouble(priceStr);
             total += itemPrice * item.getPizzaQuantity();
         }
