@@ -1,0 +1,65 @@
+.backgroundColor {
+    -fx-background-color: linear-gradient(to right, #FF0000, #990000);
+}
+
+/* Option 1: White background */
+.customScrollPane {
+    -fx-background-color: white;
+    -fx-background: white;
+}
+
+/* Option 2: Transparent background */
+.customScrollPane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+/* Additional styles to ensure transparency or white background */
+.customScrollPane > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Optional: Style the scroll bars */
+.customScrollPane .scroll-bar:vertical,
+.customScrollPane .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.customScrollPane .increment-button,
+.customScrollPane .decrement-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.customScrollPane .scroll-bar:vertical .thumb,
+.customScrollPane .scroll-bar:horizontal .thumb {
+    -fx-background-color: rgba(0, 0, 0, 0.2);
+    -fx-background-radius: 5em;
+}
+
+/* New Style: Red background for TableView column header */
+.table-view .column-header {
+    -fx-background-color: #FF0000; /* Red background for the header row */
+}
+
+/* For individual column headers */
+.table-view .column-header .label {
+    -fx-background-color: linear-gradient(to right, #FF0000, #990000); /* Red background for individual column headers */
+    -fx-text-fill: white;          /* Optional: White text color */
+}
+
+/* Make TabPane tabs invisible */
+.tab-pane .tab-header-area {
+    -fx-background-color: transparent;  /* Transparent background */
+    -fx-padding: 0;  /* No padding */
+    -fx-pref-height: 0;  /* Minimized height */
+    -fx-max-height: 0;  /* Max height reduced to 0 */
+}
+
+.tab-pane .tab-header-area .tab {
+    -fx-background-color: transparent;  /* Transparent tab background */
+    -fx-text-fill: transparent;         /* Hide the tab text */
+    -fx-padding: 0;
+    -fx-min-width: 0;
+    -fx-max-width: 0;
+}
