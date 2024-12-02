@@ -9,10 +9,12 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -287,5 +289,35 @@ public class OrderMenuController {
         alert.setContentText(content);
         alert.showAndWait();
     }
+    private void loadProducts() {
+        // Simulate product loading
+        String[] productNames = {"Product A", "Product B", "Product C"};
+        double[] productPrices = {100.0, 200.0, 300.0};
+        String [] productImage = {""};
+
+        for (int i = 0; i < productNames.length; i++) {
+            VBox productBox = createProductBox(productNames[i], productPrices[i]);
+            VBox productsContainer = new VBox();
+            productsContainer.getChildren().add(productBox);
+        }
+    }
+    private VBox createProductBox(String name, double price) {
+        VBox productBox = new VBox();
+        productBox.setSpacing(5.0);
+        productBox.setStyle("-fx-border-color: #ddd; -fx-border-width: 1; -fx-padding: 10;");
+        productBox.setPrefWidth(560);
+
+        Label nameLabel = new Label(name);
+        nameLabel.setStyle("-fx-font-weight: bold;");
+        Label priceLabel = new Label("₱" + price);
+        priceLabel.setStyle("-fx-font-size: 14px;");
+
+        Button addButton = new Button("Add to Cart");
+//        addButton.setOnAction(e -> addToCart(name, price));
+
+        productBox.getChildren().addAll(nameLabel, priceLabel, addButton);
+        return productBox;
+    }
+
 }
 

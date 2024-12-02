@@ -12,14 +12,14 @@
          <children>
             <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="25.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@images/logo_transparent.png" />
+                  <Image url="@images/PizzifyLogo.png" />
                </image>
             </ImageView>
          </children>
       </AnchorPane>
       <AnchorPane layoutX="21.0" layoutY="263.0" prefHeight="458.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 18;">
          <children>
-            <Button layoutX="14.0" layoutY="116.0" mnemonicParsing="false" onMouseClicked="#OrdersClicked" prefHeight="42.0" prefWidth="170.0" style="-fx-background-color: #479bf4;" text="Orders">
+            <Button layoutX="14.0" layoutY="116.0" mnemonicParsing="false" onMouseClicked="#OrdersClicked" prefHeight="42.0" prefWidth="170.0" style="-fx-background-color: #479bf4;" text="Orders" textFill="WHITE">
                <font>
                   <Font name="Century Gothic" size="14.0" />
                </font>
@@ -32,7 +32,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button layoutX="15.0" layoutY="38.0" mnemonicParsing="false" onMouseClicked="#QueueClicked" prefHeight="42.0" prefWidth="170.0" style="-fx-background-color: #479bf4;" text="Order Queues">
+            <Button layoutX="15.0" layoutY="38.0" mnemonicParsing="false" onMouseClicked="#QueueClicked" prefHeight="42.0" prefWidth="170.0" style="-fx-background-color: #479bf4;" text="Order Queues" textFill="WHITE">
                <font>
                   <Font name="Century Gothic" size="14.0" />
                </font>

@@ -1,5 +1,5 @@
 .backgroundColor {
-    -fx-background-color: linear-gradient(to right, #FF0000, #990000);
+    -fx-background-color: linear-gradient(to right, #4e1212, #a58f8f);
 }
 
 /* Option 1: White background */
@@ -63,3 +63,8 @@
     -fx-min-width: 0;
     -fx-max-width: 0;
 }
+.unavailable {
+    -fx-opacity: 0.5;
+    -fx-cursor: not-allowed;
+}
+

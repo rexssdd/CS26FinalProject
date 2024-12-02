@@ -24,10 +24,10 @@
                            <children>
                               <ImageView fitHeight="75.0" fitWidth="119.0" layoutX="5.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@images/B1.png" />
+                                    <Image url="@images/8%20Pizzas.png" />
                                  </image>
                               </ImageView>
-                              <Text layoutX="37.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Burgers">
+                              <Text layoutX="37.0" layoutY="88.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Regular">
                                  <font>
                                     <Font name="System Bold" size="14.0" />
                                  </font>
@@ -38,10 +38,10 @@
                            <children>
                               <ImageView fitHeight="77.0" fitWidth="127.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@images/C1.png" />
+                                    <Image url="@images/Special.png" />
                                  </image>
                               </ImageView>
-                              <Text layoutX="13.0" layoutY="98.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Chicken Wings">
+                              <Text layoutX="42.0" layoutY="98.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Special">
                                  <font>
                                     <Font name="System Bold" size="14.0" />
                                  </font>
@@ -52,21 +52,21 @@
                </content>
             </ScrollPane>
          </children></AnchorPane>
-      <AnchorPane fx:id="BurgerPane" layoutX="196.0" layoutY="124.0" prefHeight="410.0" prefWidth="479.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 15;">
+      <AnchorPane fx:id="PizzaPane" layoutX="196.0" layoutY="124.0" prefHeight="410.0" prefWidth="479.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 15;">
          <children>
             <AnchorPane fx:id="B1" layoutX="24.0" layoutY="24.0" onMouseClicked="#B1Clicked" prefHeight="120.0" prefWidth="120.0" style="-fx-background-color: #D9D9D9;">
                <children>
                   <ImageView fx:id="B1Picture" fitHeight="85.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@images/B1.png" />
+                        <Image url="@images/Deluxe.png" />
                      </image>
                   </ImageView>
-                  <Text fx:id="C1Name" layoutX="25.0" layoutY="89.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Yumburger">
+                  <Text fx:id="C1Name" layoutX="25.0" layoutY="89.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Deluxe Pizza">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Text>
-                  <Text fx:id="C1Price" layoutX="46.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="₱ 99">
+                  <Text fx:id="C1Price" layoutX="46.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="₱ 199">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -77,15 +77,15 @@
                <children>
                   <ImageView fx:id="B1Picture1" fitHeight="85.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@images/B2.png" />
+                        <Image url="@images/hawaian%20special.png" />
                      </image>
                   </ImageView>
-                  <Text fx:id="B2Name" layoutX="13.0" layoutY="93.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Cheesy Burger">
+                  <Text fx:id="B2Name" layoutX="13.0" layoutY="93.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hawaian Pizza">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Text>
-                  <Text fx:id="C1Price1" layoutX="42.0" layoutY="111.0" strokeType="OUTSIDE" strokeWidth="0.0" text="₱ 129">
+                  <Text fx:id="C1Price1" layoutX="42.0" layoutY="111.0" strokeType="OUTSIDE" strokeWidth="0.0" text="₱ 199">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -95,10 +95,10 @@
                <children>
                   <ImageView fx:id="B1Picture11" fitHeight="78.0" fitWidth="108.0" layoutX="11.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@images/B3.png" />
+                        <Image url="@images/Special.png" />
                      </image>
                   </ImageView>
-                  <Text fx:id="B2Name1" layoutX="29.0" layoutY="93.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Whopper">
+                  <Text fx:id="B2Name1" layoutX="14.0" layoutY="93.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Margherita Pizza">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
@@ -111,21 +111,21 @@
                </children></AnchorPane>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="ChickenWingsPane" layoutX="196.0" layoutY="124.0" prefHeight="410.0" prefWidth="479.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 15; visibility: false;">
+      <AnchorPane fx:id="ChickenWingsPane" layoutX="196.0" layoutY="124.0" prefHeight="410.0" prefWidth="479.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 15; visibility: false  ;">
          <children>
             <AnchorPane fx:id="C1" layoutX="24.0" layoutY="24.0" onMouseClicked="#C1Clicked" prefHeight="120.0" prefWidth="120.0" style="-fx-background-color: #D9D9D9;">
                <children>
                   <ImageView fitHeight="74.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@images/C1.png" />
+                        <Image url="@images/pepperoni.png" />
                      </image>
                   </ImageView>
-                  <Text layoutX="29.0" layoutY="89.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Spicy CW">
+                  <Text layoutX="26.0" layoutY="89.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pepperoni">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Text>
-                  <Text layoutX="43.0" layoutY="111.0" strokeType="OUTSIDE" strokeWidth="0.0" text="₱ 159">
+                  <Text layoutX="42.0" layoutY="111.0" strokeType="OUTSIDE" strokeWidth="0.0" text="₱ 159">
                      <font>
                         <Font size="14.0" />
                      </font>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<Pane fx:id="inventoryImportBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1185.0" styleClass="backgroundColor" stylesheets="@AllColors.css" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="me.group.cceproject.controllers.SuperAdminMainController">
+   <children>
+      <AnchorPane layoutX="21.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 18;">
+         <children>
+            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="10.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/PizzifyLogo.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="21.0" layoutY="263.0" prefHeight="458.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 18;">
+         <children>
+            <Button layoutX="14.0" layoutY="153.0" mnemonicParsing="false" onMouseClicked="#RemoveProductClicked" prefHeight="42.0" prefWidth="170.0" style="-fx-background-color: #479bf4;" text="Menu" textFill="WHITE">
+               <font>
+                  <Font name="Century Gothic" size="14.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button layoutX="14.0" layoutY="401.0" mnemonicParsing="false" onMouseClicked="#SignOutClicked" prefHeight="42.0" prefWidth="170.0" style="-fx-background-color: #FF0000;" text="Sign Out" textFill="WHITE">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button layoutX="15.0" layoutY="92.0" mnemonicParsing="false" onMouseClicked="#AddProductsClicked" prefHeight="42.0" prefWidth="170.0" style="-fx-background-color: #479bf4;" text="Inventory" textFill="WHITE">
+               <font>
+                  <Font name="Century Gothic" size="14.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button layoutX="14.0" layoutY="26.0" mnemonicParsing="false" onMouseClicked="#ModifyProductClicked" prefHeight="42.0" prefWidth="170.0" style="-fx-background-color: #479bf4;" text="Dashboard" textFill="WHITE">
+               <font>
+                  <Font name="Century Gothic" size="14.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="242.0" layoutY="14.0" prefHeight="728.0" prefWidth="933.0" style="-fx-background-color: #1c1414; -fx-background-radius: 18;">
+         <children>
+            <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="324.0" prefWidth="902.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 18;">
+               <children>
+                  <TableView fx:id="inventory_tableView" layoutX="14.0" layoutY="14.0" prefHeight="298.0" prefWidth="876.0" style="-fx-border-radius: 18;">
+                    <columns>
+                      <TableColumn fx:id="inventory_col_productID" prefWidth="124.20001220703125" text="Product Id" />
+                      <TableColumn fx:id="productName" prefWidth="245.39999389648438" text="Product Name" />
+                        <TableColumn fx:id="inventory_col_stock" prefWidth="117.0" text="Stock" />
+                        <TableColumn fx:id="inventory_col_price" prefWidth="102.79998779296875" text="Price" />
+                        <TableColumn fx:id="inventory_col_status" prefWidth="153.4000244140625" text="Status" />
+                        <TableColumn fx:id="inventory_col_date" prefWidth="133.199951171875" text="Date" />
+                    </columns>
+                  </TableView>
+               </children></AnchorPane>
+            <AnchorPane layoutX="14.0" layoutY="378.0" prefHeight="324.0" prefWidth="902.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 18;">
+               <children>
+                  <Label layoutX="72.0" layoutY="57.0" text="Product Id:" />
+                  <TextField fx:id="productId" layoutX="157.0" layoutY="53.0" />
+                  <Label layoutX="72.0" layoutY="110.0" text="Product Name:" />
+                  <TextField fx:id="productName" layoutX="157.0" layoutY="106.0" />
+                  <Label layoutX="393.0" layoutY="48.0" text="Stock:" />
+                  <TextField fx:id="Stock" layoutX="466.0" layoutY="44.0" promptText="0" />
+                  <Label layoutX="393.0" layoutY="110.0" text="Price(₱):" />
+                  <TextField fx:id="inventory_price" layoutX="466.0" layoutY="106.0" promptText="₱0.0" />
+                  <Button fx:id="inventory_AddBtn" layoutX="91.0" layoutY="242.0" mnemonicParsing="false" onAction="#inventoryAddBtn" prefHeight="26.0" prefWidth="90.0" text="Add" />
+                  <Button fx:id="inventory_UpdateBtn" layoutX="221.0" layoutY="242.0" mnemonicParsing="false" onAction="#inventoryUpdateBtn" onMouseClicked="#UpdateStatusClicked" prefHeight="26.0" prefWidth="89.0" text="Update" />
+                  <Button fx:id="inventory_ClearBtn" layoutX="391.0" layoutY="242.0" mnemonicParsing="false" onAction="#inventoryClearBtn" prefHeight="26.0" prefWidth="89.0" text="Clear" />
+                  <Button fx:id="inventory_DeleteBtn" layoutX="513.0" layoutY="241.0" mnemonicParsing="false" onAction="#inventoryDeleteBtn" prefHeight="26.0" prefWidth="89.0" text="Delete" />
+                  <Label layoutX="403.0" layoutY="153.0" text="Status:" />
+                  <SplitMenuButton fx:id="inventory_status" layoutX="482.0" layoutY="149.0" mnemonicParsing="false" text="Choose Status">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="Action 1" />
+                        <MenuItem mnemonicParsing="false" text="Action 2" />
+                     </items>
+                  </SplitMenuButton>
+                  <AnchorPane layoutX="707.0" layoutY="28.0" prefHeight="150.0" prefWidth="129.0" style="-fx-border-color: #000000; -fx-border-radius: 18;">
+                     <children>
+                        <ImageView fx:id="inventory_imageView" fitHeight="116.0" fitWidth="116.0" layoutX="7.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+                     </children></AnchorPane>
+                  <Button fx:id="importImage" layoutX="752.0" layoutY="194.0" mnemonicParsing="false" onMouseClicked="#ImportClicked" text="Import" />
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+               </children></AnchorPane>
+            <Separator layoutX="14.0" layoutY="358.0" prefHeight="1.0" prefWidth="902.0" style="-fx-background-color: #FFFFFF;" />
+         </children>
+      </AnchorPane>
+
+   </children>
+</Pane>

@@ -36,6 +36,8 @@ public class AdminMainController {
     @FXML
     private Text TotalText;
 
+
+
     @FXML
     private Text orderTotalText;
 
@@ -51,6 +53,7 @@ public class AdminMainController {
     @FXML
     private TabPane InputTab;
 
+
     @FXML
     private Tab OrderQueueTab;
 
@@ -62,6 +65,7 @@ public class AdminMainController {
 
     @FXML
     private Tab OrderInput;
+
     @FXML
     private TextField QuantityField;
     @FXML

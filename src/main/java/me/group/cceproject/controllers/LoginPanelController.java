@@ -16,6 +16,7 @@ import java.io.IOException;
 
 public class LoginPanelController {
 
+
     @FXML
     private TextField Username; // FXML ID for the TextField
     @FXML
@@ -68,4 +69,25 @@ public class LoginPanelController {
 
         }
     }
+    public void SuperAdminClicked(MouseEvent event){
+        try {
+            // Load the FXML file for the login panel
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/me/group/cceproject/SuperAdminLogin.fxml"));
+            Parent loginPanelRoot = loader.load();
+
+            // Get the current stage from the event source
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            // Create a new scene for the login panel
+            Scene loginPanelScene = new Scene(loginPanelRoot);
+
+            // Set the new scene and show it
+            stage.setScene(loginPanelScene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error loading SuperLoginPanel.fxml: " + e.getMessage());
+        }
+    }
+
 }
