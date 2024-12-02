@@ -1,27 +1,12 @@
-0001: Order Items
-  Order Type: Dine In
-  Bundle Code: B1
-  Pizza Name: Deluxe Pizza
-  Price: ₱ 158.00
-  Quantity: 2
-  Total Price: 316.00
-  Status: Pending
-
-0002: Order Items
-  Order Type: Dine In
-  Bundle Code: B1
-  Pizza Name: Deluxe Pizza
-  Price: ₱ 158.00
+0021: Order Items
+  Food Code: e: null
+  Pizza Name: : Pepperoni Pizza
   Quantity: 1
-  Total Price: 158.00
-  Status: Pending
-
-0003: Order Items
-  Order Type: Dine In
-  Bundle Code: B1
-  Pizza Name: Deluxe Pizza
-  Price: ₱ 139.00
-  Quantity: 2
-  Total Price: 278.00
-  Status: Pending
+  Drink Name:Coke
+  Drink Qty:0
+  Addons:
+  AddonsQty:0
+  Price: 
+  Total Price: 308.0
+  Status: In Progress
 

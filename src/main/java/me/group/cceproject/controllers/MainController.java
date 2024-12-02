@@ -11,21 +11,24 @@ import javafx.scene.input.MouseEvent;
 import java.io.IOException;
 
 public class MainController {
+    private String orderType; // Holds the current order type
 
     @FXML
     private void dineinClick(MouseEvent event) {
-        loadOrderMenu("Dine In", event);
+        orderType = "Dine In"; // Set the order type
+        loadOrderMenu(orderType, event); // Pass it to the next screen if needed
     }
 
     @FXML
     private void takeoutClick(MouseEvent event) {
-        loadOrderMenu("Take Out", event);
+        orderType = "Take Out"; // Set the order type
+        loadOrderMenu(orderType, event); // Pass it to the next screen if needed
     }
     @FXML
     private void logoclicked(MouseEvent event){
         try {
             // Load the FXML file for the login panel
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/me/group/cceproject/LoginPanel.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/me/group/cceproject/CreateAccount.fxml"));
             Parent loginPanelRoot = loader.load();
 
             // Get the current stage from the event source

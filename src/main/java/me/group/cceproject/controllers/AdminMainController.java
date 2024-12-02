@@ -3,6 +3,7 @@ package me.group.cceproject.controllers;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -18,7 +19,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
+
 
 import static me.group.cceproject.controllers.OrderMenuController.staticOrderItems;
 
@@ -77,9 +83,11 @@ public class AdminMainController {
     @FXML
     private TableColumn<OrderSummary, String> orderStatusColumn;
     @FXML
+    private TableColumn<OrderSummary, String> OrdersTypeColumn;
+    @FXML
     private TableView<OrderItem> OrdersTable;
     @FXML
-    private TableColumn<OrderItem, String> BundleId;
+    private TableColumn<OrderItem, String> OrderNum;
     @FXML
     private TableColumn<OrderItem, String> PizzaName;
     @FXML
@@ -87,11 +95,17 @@ public class AdminMainController {
     @FXML
     private TableColumn<OrderItem, Integer> PizzaQuantity;
     @FXML
-    private TableColumn<OrderItem, String> DrinkName;
+    private TableColumn<OrderItem, String> DrinksName;
     @FXML
-    private TableColumn<OrderItem, Integer> DrinkQuantity;
+    private TableColumn<OrderItem, Integer> DrinksQuantity;
     @FXML
-    private TableColumn<OrderItem, String> AddonsName;
+    private TableColumn<OrderItem, String> AddOns;
+    @FXML
+    private TableColumn<OrderItem, Integer> AddOnsQty;
+
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/pizzaordering"; // Replace with your database URL
+    private static final String DB_USER = "root"; // Replace with your database username
+    private static final String DB_PASSWORD = ""; // Replace with your database password
 
     private static final String ORDER_FILE = "orders.txt";
 
@@ -103,24 +117,26 @@ public class AdminMainController {
 
     @FXML
     public void initialize() {
+        loadOrdersData();
         // Set up the order summary columns
-        orderNumberColumn.setCellValueFactory(cellData -> cellData.getValue().orderNumberProperty());
-        orderTotalColumn.setCellValueFactory(cellData -> cellData.getValue().orderTotalProperty());
-        orderStatusColumn.setCellValueFactory(cellData -> cellData.getValue().orderStatusProperty());
+//        orderNumberColumn.setCellValueFactory(cellData -> cellData.getValue().orderNumberProperty());
+//        orderTotalColumn.setCellValueFactory(cellData -> cellData.getValue().orderTotalProperty());
+//        orderStatusColumn.setCellValueFactory(cellData -> cellData.getValue().orderStatusProperty());
+//        // Set up the order details columns
 
-        // Set up the order details columns
-        BundleId.setCellValueFactory(cellData -> cellData.getValue().foodCodeProperty());
+        OrderNum.setCellValueFactory(cellData -> cellData.getValue().foodCodeProperty());
         PizzaName.setCellValueFactory(cellData -> cellData.getValue().pizzaNameProperty());
         TotalPrice.setCellValueFactory(cellData -> cellData.getValue().pizzaPriceProperty());
         PizzaQuantity.setCellValueFactory(cellData -> cellData.getValue().pizzaquantityProperty().asObject());
-//       DrinkName.setCellValueFactory(cellData -> cellData.getValue().drinkNameProperty());
-//       AddonsName.setCellValueFactory(cellData -> cellData.getValue().addonsNameProperty());
-//        DrinkQuantity.setCellValueFactory(cellData -> cellData.getValue().drinkquantityProperty().asObject());
+        DrinksName.setCellValueFactory(cellData -> cellData.getValue().drinkNameProperty());
+        DrinksQuantity.setCellValueFactory(cellData -> cellData.getValue().drinkquantityProperty().asObject());
+        AddOns.setCellValueFactory(cellData -> cellData.getValue().addonsNameProperty());
+        AddOnsQty.setCellValueFactory(cellData -> cellData.getValue().addonsquantityProperty().asObject());
 
 
         orderStatusComboBox.getItems().addAll("Pending", "In Progress", "Completed");
         OrderNumberInput.setOnAction(event -> handleOrderNumberInput());
-// Example product IDs and prices for demonstration
+        // Example product IDs and prices for demonstration
         productPrices.put("P001", 100.0);
         productPrices.put("P002", 150.0);
         productPrices.put("P003", 200.0);
@@ -132,6 +148,37 @@ public class AdminMainController {
         // Update the total price on startup
         updateTotalPrice();
         loadOrders();
+    }
+    public void loadOrdersData() {
+        Task<ObservableList<OrderSummary>> task = new Task<ObservableList<OrderSummary>>() {
+            @Override
+            protected ObservableList<OrderSummary> call() throws Exception {
+                OrderDataFetcher dataFetcher = new OrderDataFetcher();
+                return dataFetcher.fetchOrdersFromDatabase();
+
+            }
+        };
+
+        task.setOnSucceeded(event -> {
+            // Once the task completes, update the TableView on the JavaFX Application Thread
+            ObservableList<OrderSummary> orderList = task.getValue();
+            orderNumberColumn.setCellValueFactory(cellData -> cellData.getValue().orderNumberProperty());
+            orderTotalColumn.setCellValueFactory(cellData -> cellData.getValue().orderTotalProperty());
+            orderStatusColumn.setCellValueFactory(cellData -> cellData.getValue().orderStatusProperty());
+            OrdersTypeColumn.setCellValueFactory(cellData -> cellData.getValue().orderTypeProperty());
+            // Populate the TableView with the data
+            orderTableView.setItems(orderList);
+        });
+
+        task.setOnFailed(event -> {
+            // Handle failure (e.g., show an alert)
+            showAlert("Error", "Failed to fetch orders from the database.");
+        });
+
+        // Start the task in a separate thread
+        Thread thread = new Thread(task);
+        thread.setDaemon(true); // Daemon thread will not block JVM shutdown
+        thread.start();
     }
 
     private void loadOrders() {
@@ -183,6 +230,8 @@ public class AdminMainController {
                         fullPizzaName.append("\n").append(nextLine.trim());
                     }
                     currentStack.peek().setPizzaName(fullPizzaName.toString().trim());
+                } else if (line.startsWith("Quantity:") && !currentStack.isEmpty()) {
+                    currentStack.peek().setPizzaQuantity(Integer.parseInt(line.substring(9).trim()));
                 }
                 else if (line.startsWith("Drink Name:") && !currentStack.isEmpty()) {
                     String drinkName = line.substring(11).trim();
@@ -203,17 +252,27 @@ public class AdminMainController {
                     currentStack.peek().setDrinkName(fullDrinkName.toString().trim());
 
                 }
+            else if (line.startsWith("DrinksName:")&& !currentStack.isEmpty()) {
+                    currentStack.peek().setDrinkName(line.substring(11).trim());
+                }
+                else if(line.startsWith("DrinksQuantity:")&& !currentStack.isEmpty()) {
+                    currentStack.peek().setDrinkQuantity(Integer.parseInt(line.substring(12).trim()));
+                }else if (line.startsWith("AddonsName:")&& !currentStack.isEmpty()){
+                    currentStack.peek().setAddonsName(line.substring(13).trim());
+                }
+                else if(line.startsWith("AddonsQty:")&& !currentStack.isEmpty()) {
+                    currentStack.peek().setAddonsQuantity(Integer.parseInt(line.substring(14).trim()));
+                }
+
                 // Parsing price
                 else if (line.startsWith("Price:") && !currentStack.isEmpty()) {
                     currentStack.peek().setTotalPrice(line.substring(6).trim());
                 }
                 // Parsing quantity
-                else if (line.startsWith("Quantity:") && !currentStack.isEmpty()) {
-                    currentStack.peek().setPizzaQuantity(Integer.parseInt(line.substring(9).trim()));
-                }
+
                 // Parsing total price for the order
                 else if (line.startsWith("Total Price:") && currentOrder != null) {
-                    currentOrder.setOrderTotal(line.substring(12).trim());
+                currentOrder.setPizzatotal(line.substring(12).trim());
                 }
                 // Parsing status
                 else if (line.startsWith("Status:") && currentOrder != null) {
@@ -271,12 +330,32 @@ public class AdminMainController {
 
         for (OrderSummary order : orderTableView.getItems()) {
             if (order.getOrderNumber().equals(orderNumberInput)) {
-                order.setOrderStatus(newStatus);
+                order.setOrderStatus(newStatus);  // Update order status in the table view
 
+                // Update the status in the database
+                try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+                    String updateQuery = "UPDATE orders SET status = ? WHERE order_number = ?";
+                    try (PreparedStatement updateStmt = connection.prepareStatement(updateQuery)) {
+                        updateStmt.setString(1, newStatus);  // Set the new status
+                        updateStmt.setString(2, orderNumberInput);  // Set the order number
+                        int rowsUpdated = updateStmt.executeUpdate();
+
+                        if (rowsUpdated > 0) {
+                            System.out.println("Order status updated successfully in the database.");
+                        } else {
+                            System.out.println("No order found with that order number.");
+                        }
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    showAlert("Error", "Failed to update order status in the database.");
+                }
+
+                // Additional logic for removing orders from queue and stack if completed
                 if (newStatus.equals("Completed")) {
                     orderQueue.remove(order);  // Remove from queue
-                    orderStacks.remove(order.getOrderNumber());  // Remove the stack
-                    orderTableView.getItems().remove(order);
+                    orderStacks.remove(order.getOrderNumber());  // Remove from stack
+                    orderTableView.getItems().remove(order);  // Remove from table view
                 }
 
                 orderTableView.refresh();
@@ -287,6 +366,7 @@ public class AdminMainController {
 
         showAlert("Error", "Order number " + orderNumberInput + " not found");
     }
+
 
     private void saveOrdersToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(ORDER_FILE))) {
@@ -309,8 +389,13 @@ public class AdminMainController {
                         OrderItem item = tempStack.pop();
                         writer.write("  Food Code: " + item.getFoodCode() + "\n");
                         writer.write("  Pizza Name: " + item.getPizzaName() + "\n");
-                        writer.write("  Price: " + item.getTotalPrice() + "\n");
                         writer.write("  Quantity: " + item.getPizzaQuantity() + "\n");
+                        writer.write("  Drink Name:" + item.getDrinkName() + "\n");
+                        writer.write("  Drink Qty:" + item.getDrinkQuantity() + "\n");
+                        writer.write("  Addons:"+ item.getAddonsName() + "\n");
+                        writer.write("  AddonsQty:"+ item.getAddonsQuantity() + "\n");
+                        writer.write("  Price: " + item.getTotalPrice() + "\n");
+
                         orderStack.push(item);
                         originalStack.push(item);
                     }
@@ -453,7 +538,7 @@ public class AdminMainController {
 
         // Prepare the receipt content
         StringBuilder receiptContent = new StringBuilder();
-        receiptContent.append("Kentucky Avenue \nOrder Receipt\n");
+        receiptContent.append("Pizzify \nOrder Receipt\n");
         receiptContent.append("Order Number: ").append(orderNumber).append("\n");
         receiptContent.append("Order Type: ").append(orderType).append("\n");  // Include order type
         receiptContent.append("======================================\n");

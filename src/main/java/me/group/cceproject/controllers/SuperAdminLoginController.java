@@ -40,7 +40,7 @@ public class SuperAdminLoginController {
 
     private void SuperAdminLoad(String AdminType, MouseEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/me/group/cceproject/SuperAdminMain.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/me/group/cceproject/AdminMain.fxml"));
             Parent AdminRoot = loader.load();
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

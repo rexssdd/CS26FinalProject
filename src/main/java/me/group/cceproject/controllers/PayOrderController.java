@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class PayOrderController {
+public class   PayOrderController {
 
     @FXML
     private void PayCounterClicked(MouseEvent event) {

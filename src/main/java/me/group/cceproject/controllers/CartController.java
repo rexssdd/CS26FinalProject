@@ -19,6 +19,8 @@ import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
+import java.util.Objects;
+
 public class CartController {
     @FXML
     private ScrollPane cartScrollPane;
@@ -67,8 +69,8 @@ public class CartController {
         // Food Image
         ImageView foodImage = new ImageView();
         try {
-            String imagePath = "/me/group/cceproject/images/" + item.getFoodCode() + ".png";
-            Image image = new Image(getClass().getResourceAsStream(imagePath));
+            String imagePath = "/me/group/cceproject/images/" +item.getFoodCode()+ ".png";
+            Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
             foodImage.setImage(image);
             foodImage.setFitWidth(80);
             foodImage.setFitHeight(80);
@@ -139,13 +141,15 @@ public class CartController {
         return container;
     }
 
-    private String getFoodCode(String PizzaName) {
+    private String getFoodCode(String pizzaName) {
         // Map meal names to their corresponding codes
-        switch (PizzaName) {
-            case "Pizza Margherita":
-                return "B1";
-            case "Spicy Chicken Wings":
-                return "C1";
+        switch (pizzaName) {
+            case "Hawaian Pizza":
+                return "hawaian";
+            case "Margherita Pizza":
+                return "Special";
+            case "Deluxe Pizza":
+                return "Deluxe";
             // Add more cases as needed
             default:
                 return "default-food"; // Default image

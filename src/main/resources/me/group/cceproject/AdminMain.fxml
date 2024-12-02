@@ -10,7 +10,7 @@
    <children>
       <AnchorPane layoutX="21.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 18;">
          <children>
-            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="25.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="9.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@images/PizzifyLogo.png" />
                </image>
@@ -49,8 +49,9 @@
                   <TableView fx:id="orderTableView" prefHeight="200.0" prefWidth="200.0">
                     <columns>
                         <TableColumn fx:id="orderNumberColumn" prefWidth="200.0" text="Order Number" />
-                      <TableColumn fx:id="orderTotalColumn" editable="false" prefWidth="200.0" text="Order Total" />
-                      <TableColumn fx:id="orderStatusColumn" editable="false" prefWidth="200.0" text="Order Status" />
+                      <TableColumn fx:id="orderTotalColumn" editable="false" prefWidth="167.0" text="Order Total" />
+                        <TableColumn fx:id="OrdersTypeColumn" prefWidth="113.0" text="Order Type" />
+                      <TableColumn fx:id="orderStatusColumn" editable="false" prefWidth="119.20001220703125" text="Order Status" />
                     </columns>
                   </TableView>
                </content>
@@ -59,13 +60,14 @@
                <content>
                   <TableView fx:id="OrdersTable" prefHeight="698.0" prefWidth="586.0">
                     <columns>
-                      <TableColumn fx:id="BundleId" prefWidth="74.79998779296875" text="Bundle Id" />
-                        <TableColumn fx:id="PizzaName" editable="false" prefWidth="122.80001831054688" text="Pizza Name" />
-                        <TableColumn fx:id="PizzaQuantity" prefWidth="51.800018310546875" text="Qty" />
-                        <TableColumn fx:id="DrinksName" prefWidth="105.0" text="Drinks" />
-                        <TableColumn fx:id="DrinksQuantity" prefWidth="51.0" text="Qty" />
-                        <TableColumn fx:id="AddOns" prefWidth="90.4000244140625" text="Add Ons" />
-                        <TableColumn fx:id="TotalPrice" editable="false" prefWidth="105.0" text="Total Price" />
+                      <TableColumn fx:id="OrderNum" prefWidth="71.0" text="Order.Num" />
+                        <TableColumn fx:id="PizzaName" editable="false" prefWidth="97.0" text="Pizza Name" />
+                        <TableColumn fx:id="PizzaQuantity" prefWidth="49.5999755859375" text="Qty" />
+                        <TableColumn fx:id="DrinksName" prefWidth="105.60003662109375" text="Drinks" />
+                        <TableColumn fx:id="DrinksQuantity" prefWidth="44.79998779296875" text="Qty" />
+                        <TableColumn fx:id="AddOns" prefWidth="72.0" text="Add Ons" />
+                        <TableColumn fx:id="AddOnsQty" prefWidth="52.0" text="Qty" />
+                        <TableColumn fx:id="TotalPrice" editable="false" maxWidth="120.0" prefWidth="107.20001220703125" text="Total Price" />
                     </columns>
                      <cursor>
                         <Cursor fx:constant="HAND" />
@@ -152,9 +154,9 @@
                               <Font name="Century Gothic Bold" size="20.0" />
                            </font>
                         </Text>
-                        <ImageView fitHeight="135.0" fitWidth="164.0" layoutX="96.0" layoutY="-15.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="135.0" fitWidth="164.0" layoutX="95.0" layoutY="-15.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@images/logo_transparent.png" />
+                              <Image url="@images/PizzifyLogo.png" />
                            </image>
                         </ImageView>
                         <Label layoutX="13.0" layoutY="121.0" text="Order Number:">

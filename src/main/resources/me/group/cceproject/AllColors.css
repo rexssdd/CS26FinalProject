@@ -1,5 +1,5 @@
 .backgroundColor {
-    -fx-background-color: linear-gradient(to right, #4e1212, #a58f8f);
+    -fx-background-color: linear-gradient(to right, #df0707, #1c0202);
 }
 
 /* Option 1: White background */
@@ -39,12 +39,12 @@
 
 /* New Style: Red background for TableView column header */
 .table-view .column-header {
-    -fx-background-color: #FF0000; /* Red background for the header row */
+    -fx-background-color: #050303; /* Red background for the header row */
 }
 
 /* For individual column headers */
 .table-view .column-header .label {
-    -fx-background-color: linear-gradient(to right, #FF0000, #990000); /* Red background for individual column headers */
+    -fx-background-color: linear-gradient(to right, #df0707, #090404); /* Red background for individual column headers */
     -fx-text-fill: white;          /* Optional: White text color */
 }
 

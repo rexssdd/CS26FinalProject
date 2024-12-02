@@ -28,14 +28,15 @@ public class OrderItem {
 
     // Getters
     public String getPizzaName() { return pizzaName.get(); }
+    public int getPizzaQuantity() { return pizzaQuantity.get(); }
     public String getTotalPrice() { return totalPrice.get(); }
     public String getFoodCode() { return foodCode.get(); }
-    public int getPizzaQuantity() { return pizzaQuantity.get(); }
-public int getDrinkQuantity() { return drinkQuantity.get(); }
+    public int getDrinkQuantity() { return drinkQuantity.get(); }
     public int getAddonsQuantity() { return addonsQuantity.get(); }
     public String getAddonsName() { return addonsName.get(); }
     public String getDrinkName() { return drinkName.get(); }
     // Setters
+
     public void setPizzaName(String pizzaName) {
         this.pizzaName.set(pizzaName);
     }
@@ -72,4 +73,5 @@ public int getDrinkQuantity() { return drinkQuantity.get(); }
     public SimpleIntegerProperty addonsquantityProperty() { return addonsQuantity; }
     public SimpleStringProperty addonsNameProperty() { return addonsName; }
     public SimpleStringProperty drinkNameProperty() { return drinkName; }
+
 }

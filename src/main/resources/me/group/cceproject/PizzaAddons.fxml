@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="781.0" prefWidth="700.0" styleClass="backgroundColor" stylesheets="@AllColors.css" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="me.group.cceproject.controllers.MealAddonsController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="781.0" prefWidth="700.0" styleClass="backgroundColor" stylesheets="@AllColors.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="me.group.cceproject.controllers.PizzaAddonsController">
    <children>
       <AnchorPane layoutX="25.0" layoutY="29.0" prefHeight="195.0" prefWidth="650.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;">
          <children>
@@ -25,7 +29,7 @@
                   <Font name="System Bold" size="24.0" />
                </font>
             </Text>
-            <TextField fx:id="pizzaQtyNumber" alignment="CENTER" layoutX="516.0" layoutY="14.0" prefHeight="26.0" prefWidth="66.0" style="-fx-border-color: DB383D; -fx-border-radius: 5;" text="1" />
+            <TextField fx:id="pizzaQtyNumber" alignment="CENTER" editable="false" layoutX="516.0" layoutY="14.0" prefHeight="26.0" prefWidth="66.0" style="-fx-border-color: DB383D; -fx-border-radius: 5;" text="1" />
             <Button fx:id="pizzaAddBtn" layoutX="593.0" layoutY="12.0" mnemonicParsing="false" onMouseClicked="#pizzaAddClicked" prefHeight="10.0" prefWidth="11.0" style="-fx-background-color: #f13030; -fx-border-color: DB383D; -fx-border-radius: 5;" text="+" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font size="14.0" />
@@ -36,6 +40,11 @@
                   <Font size="14.0" />
                </font>
             </Button>
+            <Text layoutX="399.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Quantity:">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Text>
          </children>
       </AnchorPane>
       <AnchorPane layoutX="25.0" layoutY="241.0" prefHeight="215.0" prefWidth="650.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;">
@@ -85,7 +94,7 @@
                </children>
             </AnchorPane>
             <AnchorPane layoutX="334.0" layoutY="48.0" prefHeight="100.0" prefWidth="100.0" />
-            <TextField fx:id="drinksQtyNumber" alignment="CENTER" layoutX="517.0" layoutY="9.0" prefHeight="26.0" prefWidth="66.0" style="-fx-border-color: DB383D; -fx-border-radius: 5;" text="1" />
+            <TextField fx:id="drinksQtyNumber" alignment="CENTER" editable="false" layoutX="517.0" layoutY="9.0" prefHeight="26.0" prefWidth="66.0" style="-fx-border-color: DB383D; -fx-border-radius: 5;" text="1" />
             <Button fx:id="drinksAddBtn" layoutX="590.0" layoutY="7.0" mnemonicParsing="false" onMouseClicked="#drinksAddClicked" prefHeight="10.0" prefWidth="11.0" style="-fx-background-color: #f13030; -fx-border-color: DB383D; -fx-border-radius: 5;" text="+" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font size="14.0" />
@@ -96,6 +105,11 @@
                   <Font size="14.0" />
                </font>
             </Button>
+            <Text layoutX="402.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Quantity:">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Text>
          </children></AnchorPane>
       <AnchorPane layoutX="25.0" layoutY="473.0" prefHeight="216.0" prefWidth="650.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10;">
          <children>
@@ -108,7 +122,7 @@
                <children>
                   <ImageView fitHeight="78.0" fitWidth="77.0" layoutX="20.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@images/sundae.png" />
+                        <Image url="@images/1.png" />
                      </image>
                   </ImageView>
                   <Text layoutX="36.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" text="₱ 39">
@@ -123,36 +137,22 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </Text>
-            <TextField fx:id="QuantityNumber" alignment="CENTER" layoutX="520.0" layoutY="10.0" prefHeight="26.0" prefWidth="66.0" style="-fx-border-color: DB383D; -fx-border-radius: 5;" text="1" />
-            <AnchorPane fx:id="MeatPane" layoutX="120.0" layoutY="47.0" onMouseClicked="#CPClicked" prefHeight="100.0" prefWidth="100.0">
+            <TextField fx:id="QuantityNumber" alignment="CENTER" editable="false" layoutX="520.0" layoutY="10.0" prefHeight="26.0" prefWidth="66.0" style="-fx-border-color: DB383D; -fx-border-radius: 5;" text="0" />
+            <AnchorPane fx:id="PepperoniPane" layoutX="120.0" layoutY="47.0" onMouseClicked="#CPClicked" prefHeight="100.0" prefWidth="100.0">
                <children>
-                  <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="78.0" fitWidth="90.0" layoutX="9.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@images/creampie.png" />
+                        <Image url="@images/2.png" />
                      </image>
                   </ImageView>
-                  <Text layoutX="36.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" text="₱ 49">
+                  <Text layoutX="36.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" text="₱ 59">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Text>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="PepperoniPane" layoutX="225.0" layoutY="44.0" onMouseClicked="#RVClicked" prefHeight="100.0" prefWidth="100.0">
-               <children>
-                  <ImageView fitHeight="90.0" fitWidth="52.0" layoutX="24.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@images/redvelvet.png" />
-                     </image>
-                  </ImageView>
-                  <Text layoutX="36.0" layoutY="104.0" strokeType="OUTSIDE" strokeWidth="0.0" text="₱ 59">
-                     <font>
-                        <Font name="System Bold" size="14.0" />
-                     </font>
-                  </Text>
-               </children>
-            </AnchorPane>
-            <AnchorPane fx:id="NoThanksPane" layoutX="325.0" layoutY="44.0" onMouseClicked="#NTClicked" prefHeight="100.0" prefWidth="100.0">
+            <AnchorPane fx:id="NoThanksPane" layoutX="220.0" layoutY="48.0" onMouseClicked="#NTClicked" prefHeight="100.0" prefWidth="100.0">
                <children>
                   <ImageView fitHeight="100.0" fitWidth="90.0" layoutX="5.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
                      <image>

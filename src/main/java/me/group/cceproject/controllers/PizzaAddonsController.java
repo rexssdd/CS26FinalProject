@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;  // Import TextField for quantity input
 import javafx.scene.input.MouseEvent;
@@ -14,7 +15,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class MealAddonsController {
+import java.io.InputStream;
+
+public class PizzaAddonsController {
 
     // Drink Panes
     @FXML
@@ -25,8 +28,7 @@ public class MealAddonsController {
     private Pane MtnDewPane;
     @FXML
     private Pane CheesePane;
-    @FXML
-    private Pane MeatPane;
+
     @FXML
     private Pane PepperoniPane;
     @FXML
@@ -50,18 +52,25 @@ public class MealAddonsController {
     private Button AddtoOrderButton;
     @FXML
     private Button CancelButton;
+    @FXML
+    private Button addonsMinusBtn;
+    @FXML
+    private Button addonsAddBtn;
+    @FXML
+    private TextField QuantityNumber;
+
 
     @FXML
     private TextField drinksQtyNumber;
     @FXML
     private TextField pizzaQtyNumber;
     // TextField for quantity selection
-    @FXML
-    private TextField QuantityNumber;
+
 
     private String foodCode;
     private String selectedSize = "Small";  // Default size
     private String selectedDrink = "Coke";  // Default drink
+    private String selectedAddons = "No Thanks";
 
     // Styles for drink panes
     private final String selectedPaneStyle = "-fx-border-color: #DB383D; -fx-border-width: 2; -fx-border-radius: 5;";
@@ -81,19 +90,34 @@ public class MealAddonsController {
         SmallButton.setStyle(selectedButtonStyle);
     }
 
-    public void setMealDetails(String pizzaName, String pizzaPrice, String imagePath, String foodCode) {
+    public void setMealDetails(String pizzaName, String pizzaPrice, String Path, String productId) {
         this.foodCode = foodCode;
         PizzaName.setText(pizzaName);
         PizzaPrice.setText(pizzaPrice);
+
         try {
-            String resourcePath = "/me/group/cceproject/images/" + imagePath;
-            Image image = new Image(getClass().getResource(resourcePath).toExternalForm());
-            PizzaPicture.setImage(image);
+            // Correct path format using the class loader
+            String resourcePath = "/me/group/cceproject/images/"+productId+ ".png";
+            InputStream imageStream = getClass().getResourceAsStream(resourcePath);
+
+            if (imageStream == null) {
+                System.out.println("Image not found: " + resourcePath);
+                showAlert(Alert.AlertType.ERROR, "Error", null, "Image not found: " + resourcePath);
+            } else {
+                Image image = new Image(Path, 110, 90, false, true);
+                PizzaPicture.setImage(image);
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", null, "Failed to load image: " + e.getMessage());
         }
     }
-// btns for quantity
+
+    private void showAlert(Alert.AlertType alertType, String error, Object o, String s) {
+
+    }
+
+    // btns for quantity
     @FXML
    private void pizzaAddClicked(MouseEvent event) {
     try{
@@ -132,6 +156,8 @@ public class MealAddonsController {
             e.printStackTrace();
         }
     }
+
+
      @FXML
      private void drinksMinusClicked (MouseEvent event){
         try{
@@ -180,7 +206,7 @@ public class MealAddonsController {
     @FXML
     private void SpriteClicked(MouseEvent event) {
         selectDrinkPane(SpritePane);
-        selectedDrink = "Sprite";  // Update selected drink
+        selectedDrink = "Sprite";// Update selected drink
     }
 
     @FXML
@@ -192,21 +218,34 @@ public class MealAddonsController {
     @FXML
     private void CFClicked(MouseEvent event) {
         selectAddonPane(CheesePane);
+        selectedAddons = "Cheese";
+        addonsMinusBtn.setDisable(false);
+        addonsAddBtn.setDisable(false);
+        QuantityNumber.setDisable(false);
+        QuantityNumber.setText("1");
     }
 
     @FXML
     private void CPClicked(MouseEvent event) {
-        selectAddonPane(MeatPane);
+        selectAddonPane(PepperoniPane);
+        selectedAddons = "Pepperoni";
+        addonsMinusBtn.setDisable(false);
+        addonsAddBtn.setDisable(false);
+        QuantityNumber.setDisable(false);
+        QuantityNumber.setText("1");
     }
 
-    @FXML
-    private void RVClicked(MouseEvent event) {
-        selectAddonPane(PepperoniPane);
-    }
 
     @FXML
     private void NTClicked(MouseEvent event) {
-        selectAddonPane(NoThanksPane);
+            selectAddonPane(NoThanksPane);
+            selectedAddons = "No Thanks";
+            addonsMinusBtn.setDisable(true);
+            addonsAddBtn.setDisable(true);
+            QuantityNumber.setDisable(true);
+            QuantityNumber.setText("0");
+
+
     }
 
     @FXML
@@ -236,10 +275,10 @@ public class MealAddonsController {
 
     private void selectAddonPane(Pane selectedAddonPane) {
         CheesePane.setStyle(defaultPaneStyle);
-        MeatPane.setStyle(defaultPaneStyle);
         PepperoniPane.setStyle(defaultPaneStyle);
         NoThanksPane.setStyle(defaultPaneStyle);
         selectedAddonPane.setStyle(selectedPaneStyle);
+
     }
 
     private void selectSize(Button selectedButton) {
@@ -259,28 +298,32 @@ public class MealAddonsController {
 
             // Get inputs for pizza, drink, and addon details
             String completepizzaName = PizzaName.getText();
-            String selectedDrink = this.selectedDrink;
+            String selectedrink = selectedDrink.equals("Coke") ? "Coke" : selectedDrink.equals("Sprite") ? "Sprite" : "Mountain Dew" ;
             int drinkQty = Integer.parseInt(drinksQtyNumber.getText().trim());
-            String addon = selectedAddon;
+            String addon = selectedAddons.equals("Cheese")? "Cheese" : selectedAddons.equals("Pepperoni") ? "Pepperoni" : "No Thanks";
             int addonQty = Integer.parseInt(QuantityNumber.getText().trim());
             String formattedPrice = String.format("₱ %.2f", finalPrice);
             int quantity = Integer.parseInt(pizzaQtyNumber.getText().trim());
+            String number = null;
 
-
-            if (quantity < 1 || drinkQty < 1 || addonQty < 1) {
+            if (quantity < 1 || drinkQty < 1 ) {
                 return; // Exit if any quantity is invalid
             }
 
             OrderMenuController.addOrderItem(
+
                     completepizzaName,
                     quantity,
-                    selectedDrink,
+                    selectedrink,
                     drinkQty,
                     addon,
                     addonQty,
                     formattedPrice,
-                    foodCode
+                    foodCode,
+                    number
             );
+
+
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/me/group/cceproject/OrderMenu.fxml"));
             Parent orderMenuRoot = loader.load();
@@ -300,8 +343,8 @@ public class MealAddonsController {
 
     private String getSelectedAddon() {
         if (CheesePane.getStyle().contains("DB383D")) return "Cheese";
-        if (MeatPane.getStyle().contains("DB383D")) return "Meat";
         if (PepperoniPane.getStyle().contains("DB383D")) return "Pepperoni";
+        if (NoThanksPane.getStyle().contains("DB383D")) return "NoThanks";
         return "No Thanks";
     }
 
@@ -325,9 +368,7 @@ public class MealAddonsController {
             case "Cheese":
                 finalPrice += 39;
                 break;
-            case "Meat":
-                finalPrice += 49;
-                break;
+
             case "Pepperoni":
                 finalPrice += 59;
                 break;
