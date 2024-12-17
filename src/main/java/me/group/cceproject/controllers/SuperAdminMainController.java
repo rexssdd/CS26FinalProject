@@ -2,7 +2,6 @@ package me.group.cceproject.controllers;
 
 
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,19 +17,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.security.cert.PolicyNode;
 import java.sql.*;
 import java.util.*;
-import java.util.logging.Level;
 
-import static com.mysql.cj.conf.PropertyKey.logger;
 import static me.group.cceproject.controllers.OrderMenuController.staticOrderItems;
 
 public class SuperAdminMainController {
@@ -100,60 +93,240 @@ public class SuperAdminMainController {
 
 
     }
-
     @FXML
     private void inventoryUpdateButtonClicked() {
-        if (!isInputValid()) {
-            showAlert(Alert.AlertType.ERROR, "Error Message", "Please fill all required fields.");
+        // Prompt the user to enter the product ID
+        String productID = showInputDialog("Enter Product ID:", "Update Product");
+        if (productID == null || productID.trim().isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Error Message", "Product ID cannot be empty.");
             return;
         }
 
-        String checkProdID = "SELECT prod_id FROM products WHERE prod_id = ?";
+        String checkProdID = "SELECT product_id FROM products WHERE product_id = ?";
         try (Connection connect = Database.connectDB();
              PreparedStatement checkStmt = connect.prepareStatement(checkProdID)) {
 
-            checkStmt.setString(1, inventory_productID.getText().trim());
+            checkStmt.setString(1, productID.trim());
             try (ResultSet result = checkStmt.executeQuery()) {
                 if (!result.next()) {
                     showAlert(Alert.AlertType.ERROR, "Error Message",
-                            "Product ID " + inventory_productID.getText().trim() + " does not exist.");
+                            "Product ID " + productID.trim() + " does not exist.");
                 } else {
-                    updateProductInDatabase(connect);
+                    // Proceed to update product details
+                    updateProductInDatabase(connect, productID.trim());
                 }
             }
         } catch (SQLException e) {
             showAlert(Alert.AlertType.ERROR, "Database Error", "An error occurred while updating the product.");
-//            logger.log(Level.SEVERE, "Database error while updating product", e);
         }
     }
 
-    private void updateProductInDatabase(Connection connect) {
-        String updateData = "UPDATE products SET product_name = ?, stock = ?, price = ?, status = ?, image = ?, date = ? "
-                + "WHERE prod_id = ?";
-        try (PreparedStatement updateStmt = connect.prepareStatement(updateData)) {
-            updateStmt.setString(1, inventory_productName.getText().trim());
-            updateStmt.setInt(2, parseIntegerField(inventory_stock.getText().trim(), "Stock"));
-            updateStmt.setDouble(3, parseDoubleField(inventory_price.getText().trim(), "Price"));
-            updateStmt.setString(4, inventory_status.getSelectionModel().getSelectedItem());
-            updateStmt.setString(5, data.path.replace("\\", "\\\\"));
-            updateStmt.setDate(6, new java.sql.Date(System.currentTimeMillis()));
-            updateStmt.setString(7, inventory_productID.getText().trim());
+    private void updateProductInDatabase(Connection connect, String productID) {
+        // Ask the user for the details in a custom dialog
+        ProductUpdateDialog dialog = new ProductUpdateDialog(productID);
+        Optional<ProductDetails> result = dialog.showAndWait();
 
-            int rowsAffected = updateStmt.executeUpdate();
-            if (rowsAffected > 0) {
-                showAlert(Alert.AlertType.INFORMATION, "Success", "Product updated successfully!");
-                inventoryShowData();
-                inventoryClearBtn();
-            } else {
-                showAlert(Alert.AlertType.ERROR, "Error", "No product was updated. Please try again.");
+        if (result.isPresent()) {
+            ProductDetails productDetails = result.get();
+
+            String newStock = productDetails.getStock();
+            String newPrice = productDetails.getPrice();
+            String newStatus = productDetails.getStatus();
+            String newImage = productDetails.getImage();
+
+            // Update the product details in the database
+            String updateData = "UPDATE products SET stock = ?, price = ?, status = ?, image = ?, date = ? WHERE product_id = ?";
+            try (PreparedStatement updateStmt = connect.prepareStatement(updateData)) {
+                // Set the new values or retain the current values
+                updateStmt.setInt(1, newStock != null && !newStock.isEmpty() ? Integer.parseInt(newStock) : getCurrentStock(productID));
+                updateStmt.setDouble(2, newPrice != null && !newPrice.isEmpty() ? Double.parseDouble(newPrice) : getCurrentPrice(productID));
+                updateStmt.setString(3, newStatus != null && !newStatus.isEmpty() ? newStatus : getCurrentStatus(productID));
+                updateStmt.setString(4, newImage != null && !newImage.isEmpty() ? newImage.replace("\\", "\\\\") : getCurrentImage(productID));
+                updateStmt.setDate(5, new java.sql.Date(System.currentTimeMillis()));
+                updateStmt.setString(6, productID);
+
+                int rowsAffected = updateStmt.executeUpdate();
+                if (rowsAffected > 0) {
+                    showAlert(Alert.AlertType.INFORMATION, "Success", "Product updated successfully!");
+                    inventoryShowData();
+                    inventoryClearBtn();
+                } else {
+                    showAlert(Alert.AlertType.ERROR, "Error", "No product was updated. Please try again.");
+                }
+            } catch (SQLException e) {
+                showAlert(Alert.AlertType.ERROR, "Database Error", "An error occurred while updating the product.");
+            } catch (IllegalArgumentException ex) {
+                showAlert(Alert.AlertType.ERROR, "Input Error", ex.getMessage());
             }
-        } catch (SQLException e) {
-            showAlert(Alert.AlertType.ERROR, "Database Error", "An error occurred while updating the product.");
-//            logger.log(Level.SEVERE, "Database error while updating product", e);
-        } catch (IllegalArgumentException ex) {
-            showAlert(Alert.AlertType.ERROR, "Input Error", ex.getMessage());
         }
     }
+
+    // Helper method to display an input dialog and return the user's input
+    private String showInputDialog(String prompt, String title) {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle(title);  // Set the title
+        dialog.setHeaderText(prompt);  // Set the prompt
+        Optional<String> result = dialog.showAndWait();
+        return result.orElse(null);
+    }
+
+    // Product update dialog class
+
+
+    public static class ProductUpdateDialog extends Dialog<ProductDetails> {
+        private TextField stockField = new TextField();
+        private TextField priceField = new TextField();
+        private ComboBox<String> statusComboBox = new ComboBox<>();
+        private TextField imageField = new TextField();
+        private CheckBox updateImageCheckBox = new CheckBox("Update Image");
+        private Stage primaryStage;
+
+        public ProductUpdateDialog(String productID) {
+            this.primaryStage = primaryStage;  // Passing the main stage for file dialog use
+
+            setTitle("Update Product Details");
+            setHeaderText("Enter new details for Product ID: " + productID);
+
+            // Set default values from the current database (optional)
+            stockField.setText(String.valueOf(getCurrentStock(productID)));
+            priceField.setText(String.valueOf(getCurrentPrice(productID)));
+            statusComboBox.getItems().addAll("Available", "Not Available");
+            statusComboBox.setValue(getCurrentStatus(productID));  // Set current status
+            imageField.setText(getCurrentImage(productID));  // Set current image path
+
+            // Add placeholders to stock and image fields
+            stockField.setPromptText("Enter stock (e.g., 10)");
+            imageField.setPromptText("Enter image path (e.g., /images/product.jpg)");
+
+            // Image update checkbox and disable the image field initially
+            updateImageCheckBox.setSelected(false);
+            imageField.setDisable(true);
+
+            // Add listener to checkbox to enable/disable the image field and file chooser
+            updateImageCheckBox.setOnAction(e -> {
+                if (updateImageCheckBox.isSelected()) {
+                    imageField.setDisable(false);  // Enable the image field if checked
+                } else {
+                    imageField.setDisable(true);  // Disable the image field if unchecked
+                    imageField.clear();  // Clear the image field if user does not want to update the image
+                }
+            });
+
+            // Add file chooser to select image path
+            imageField.setOnMouseClicked(event -> openFileChooser(event));
+
+            // Create the dialog layout
+            VBox vbox = new VBox(10);
+            vbox.getChildren().addAll(
+                    new Label("Stock:"), stockField,
+                    new Label("Price:"), priceField,
+                    new Label("Status:"), statusComboBox,
+                    updateImageCheckBox, // Checkbox to update image
+                    new Label("Image Path:"), imageField
+            );
+
+            getDialogPane().setContent(vbox);
+
+            // Add buttons
+            ButtonType updateButton = new ButtonType("Update", ButtonBar.ButtonData.OK_DONE);
+            getDialogPane().getButtonTypes().addAll(updateButton, ButtonType.CANCEL);
+
+            // Convert the user's input to a ProductDetails object on submit
+            setResultConverter(dialogButton -> {
+                if (dialogButton == updateButton) {
+                    return new ProductDetails(
+                            stockField.getText(),
+                            priceField.getText(),
+                            statusComboBox.getValue(),
+                            imageField.getText()
+                    );
+                }
+                return null;
+            });
+        }
+
+        // Method to open a file chooser dialog
+        private void openFileChooser(MouseEvent event) {
+            if (updateImageCheckBox.isSelected()) {
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg"));
+                fileChooser.setTitle("Select an Image");
+
+                // Show file chooser and capture the selected file
+                java.io.File selectedFile = fileChooser.showOpenDialog(primaryStage);
+                if (selectedFile != null) {
+                    imageField.setText(selectedFile.getAbsolutePath());
+                }
+            }
+        }
+    }
+
+
+
+    // Helper class to store the product details
+    public static class ProductDetails {
+        private String stock;
+        private String price;
+        private String status;
+        private String image;
+
+        public ProductDetails(String stock, String price, String status, String image) {
+            this.stock = stock;
+            this.price = price;
+            this.status = status;
+            this.image = image;
+        }
+
+        public String getStock() {
+            return stock;
+        }
+
+        public String getPrice() {
+            return price;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public String getImage() {
+            return image;
+        }
+    }
+
+    // Helper methods for getting current values from the database
+    private static int getCurrentStock(String productID) {
+        // Fetch the current stock from the database
+        // Placeholder code for database query, replace with your actual code
+        return 0;  // Return the current stock value from your database
+    }
+
+    private static double getCurrentPrice(String productID) {
+        // Fetch the current price from the database
+        // Placeholder code for database query, replace with your actual code
+        return 0.0;  // Return the current price value from your database
+    }
+
+    private static String getCurrentStatus(String productID) {
+        // Fetch the current status from the database
+        // Placeholder code for database query, replace with your actual code
+        return "Available";  // Return the current status value from your database
+    }
+
+    private static String getCurrentImage(String productID) {
+        // Fetch the current image path from the database
+        // Placeholder code for database query, replace with your actual code
+        return "default_image.jpg";  // Return the current image path from your database
+    }
+
+//    private void showAlert(Alert.AlertType alertType, String title, String message) {
+//        Alert alert = new Alert(alertType);
+//        alert.setTitle(title);
+//        alert.setHeaderText(null);
+//        alert.setContentText(message);
+//        alert.showAndWait();
+//    }
+
 
 
     private void showAlert(String title, String message) {

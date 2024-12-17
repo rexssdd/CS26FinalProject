@@ -8,6 +8,7 @@ import java.util.Date;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -69,6 +70,9 @@ public class ProductCardController {
     public void initialize() {
 //        printAllItems();
 //        getStockFromDatabase(productId);
+        prod_name.setAlignment(Pos.CENTER);  // Set alignment to center
+        prod_price.setAlignment(Pos.CENTER);
+        Stock.setAlignment(Pos.CENTER);
     }
 
     private void getStockFromDatabase(String productId) {

@@ -61,7 +61,7 @@
                   <Button fx:id="inventory_AddBtn" layoutX="91.0" layoutY="242.0" mnemonicParsing="false" onMouseClicked="#inventoryAddBtn" prefHeight="26.0" prefWidth="90.0" text="Add" />
                   <Button fx:id="inventory_UpdateBtn" layoutX="221.0" layoutY="242.0" mnemonicParsing="false" onAction="#inventoryUpdateButtonClicked" prefHeight="26.0" prefWidth="89.0" text="Update" />
                   <Button fx:id="inventory_ClearBtn" layoutX="391.0" layoutY="242.0" mnemonicParsing="false" onAction="#inventoryClearBtn" prefHeight="26.0" prefWidth="89.0" text="Clear" />
-                  <Button fx:id="inventory_DeleteBtn" layoutX="513.0" layoutY="241.0" mnemonicParsing="false" onAction="#inventoryDeleteBtn" prefHeight="26.0" prefWidth="89.0" text="Delete" />
+                  <Button fx:id="inventory_DeleteBtn" layoutX="513.0" layoutY="241.0" mnemonicParsing="false" onAction="#inventoryDeleteBtn" prefHeight="26.0" prefWidth="89.0" text="Delete" visible="false" />
                   <Label layoutX="403.0" layoutY="153.0" text="Status:" />
                   <AnchorPane layoutX="707.0" layoutY="28.0" prefHeight="150.0" prefWidth="129.0" style="-fx-border-color: #000000; -fx-border-radius: 18;">
                      <children>

@@ -60,14 +60,14 @@
                <content>
                   <TableView fx:id="OrdersTable" prefHeight="698.0" prefWidth="586.0">
                     <columns>
-                      <TableColumn fx:id="OrderNum" prefWidth="71.0" text="Order.Num" />
-                        <TableColumn fx:id="PizzaName" editable="false" prefWidth="97.0" text="Pizza Name" />
-                        <TableColumn fx:id="PizzaQuantity" prefWidth="49.5999755859375" text="Qty" />
-                        <TableColumn fx:id="DrinksName" prefWidth="105.60003662109375" text="Drinks" />
-                        <TableColumn fx:id="DrinksQuantity" prefWidth="44.79998779296875" text="Qty" />
-                        <TableColumn fx:id="AddOns" prefWidth="72.0" text="Add Ons" />
-                        <TableColumn fx:id="AddOnsQty" prefWidth="52.0" text="Qty" />
-                        <TableColumn fx:id="TotalPrice" editable="false" maxWidth="120.0" prefWidth="107.20001220703125" text="Total Price" />
+                      <TableColumn fx:id="OrderNum" prefWidth="71.0" text="Order.Num" visible="false" />
+                        <TableColumn fx:id="PizzaName" editable="false" prefWidth="127.60000610351562" text="Pizza Name" />
+                        <TableColumn fx:id="PizzaQuantity" prefWidth="48.399993896484375" text="Qty" />
+                        <TableColumn fx:id="DrinksName" prefWidth="114.0" text="Drinks" />
+                        <TableColumn fx:id="DrinksQuantity" prefWidth="59.60003662109375" text="Qty" />
+                        <TableColumn fx:id="AddOns" prefWidth="90.79998779296875" text="Add Ons" />
+                        <TableColumn fx:id="AddOnsQty" prefWidth="66.4000244140625" text="Qty" />
+                        <TableColumn fx:id="TotalPrice" editable="false" maxWidth="177.5999755859375" prefWidth="97.79998779296875" text="Total Price" />
                     </columns>
                      <cursor>
                         <Cursor fx:constant="HAND" />

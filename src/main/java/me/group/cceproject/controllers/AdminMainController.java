@@ -121,7 +121,7 @@ public class AdminMainController {
 //        orderStatusColumn.setCellValueFactory(cellData -> cellData.getValue().orderStatusProperty());
 //        // Set up the order details columns
 
-        OrderNum.setCellValueFactory(cellData -> cellData.getValue().orderNumberProperty());
+        OrderNum.setCellValueFactory(cellData -> cellData.getValue().foodCodeProperty());
         PizzaName.setCellValueFactory(cellData -> cellData.getValue().pizzaNameProperty());
         TotalPrice.setCellValueFactory(cellData -> cellData.getValue().pizzaPriceProperty());
         PizzaQuantity.setCellValueFactory(cellData -> cellData.getValue().pizzaquantityProperty().asObject());
@@ -384,7 +384,7 @@ public class AdminMainController {
                     // Write items and restore original stack
                     while (!tempStack.isEmpty()) {
                         OrderItem item = tempStack.pop();
-                        writer.write("  Food Code: " + item.getOrderNumber() + "\n");
+                        writer.write("  Food Code: " + item.getFoodCode() + "\n");
                         writer.write("  Pizza Name: " + item.getPizzaName() + "\n");
                         writer.write("  Quantity: " + item.getPizzaQuantity() + "\n");
                         writer.write("  Drink Name:" + item.getDrinkName() + "\n");

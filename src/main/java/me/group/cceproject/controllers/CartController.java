@@ -19,11 +19,6 @@ import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class CartController {
@@ -63,7 +58,6 @@ public class CartController {
             totalPriceText.setText(String.format("₱ %.2f", totalPrice));
         }
     }
-
     private HBox createCartItemContainer(OrderItem item) {
         HBox container = new HBox(20);
         container.setAlignment(Pos.CENTER_LEFT);
@@ -74,7 +68,7 @@ public class CartController {
         // Food Image
         ImageView foodImage = new ImageView();
         try {
-            String imagePath = "/me/group/cceproject/images/" + item.getProductId() + ".png";  // Changed from item.getOrderNumber() to item.getProductId()
+            String imagePath = "/me/group/cceproject/images/" + item.getPizzaName() + ".png";
             Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
             foodImage.setImage(image);
             foodImage.setFitWidth(80);
@@ -92,34 +86,23 @@ public class CartController {
         VBox centerSection = new VBox(10);
         centerSection.setAlignment(Pos.CENTER_LEFT);
 
-        HBox quantityBox = new HBox(10);
-        quantityBox.setAlignment(Pos.CENTER_LEFT);
+        // Pizza Quantity Controls
+        HBox pizzaQuantityBox = createQuantityControls("Pizza Quantity:", item.getPizzaQuantity(), null);
+        centerSection.getChildren().add(pizzaQuantityBox);
 
-        Text quantityLabel = new Text("Quantity:");
-        quantityLabel.setStyle("-fx-font-size: 14px;");
+        // Drink Info and Quantity Controls (if exists)
+        if (item.getDrinkName() != null && !item.getDrinkName().isEmpty()) {
+            HBox drinkQuantityBox = createQuantityControls(item.getDrinkName(), item.getDrinkQuantity(), null);
+            centerSection.getChildren().add(drinkQuantityBox);
+        }
 
-        HBox controlsBox = new HBox(5);
-        controlsBox.setAlignment(Pos.CENTER_LEFT);
-
-        Button decreaseBtn = new Button("-");
-        Text quantityText = new Text(String.valueOf(item.getPizzaQuantity()));
-        Button increaseBtn = new Button("+");
-
-        // Style the quantity controls
-        String buttonStyle = "-fx-background-color: white; -fx-border-color: #DB383D; " +
-                "-fx-text-fill: #DB383D; -fx-border-radius: 5; " +
-                "-fx-min-width: 30; -fx-min-height: 30; -fx-cursor: hand;";
-        decreaseBtn.setStyle(buttonStyle);
-        increaseBtn.setStyle(buttonStyle);
-        quantityText.setStyle("-fx-font-size: 14px;");
-
-        // Add controls to the controls box
-        controlsBox.getChildren().addAll(decreaseBtn, quantityText, increaseBtn);
-
-        // Add label and controls to quantity box
-        quantityBox.getChildren().addAll(quantityLabel, controlsBox);
-
-        centerSection.getChildren().addAll(nameText, quantityBox);
+        // Add Addons Info and Quantity Controls (if exists)
+        if (item.getAddonsName() != null && !item.getAddonsName().isEmpty()) {
+            String addonName = item.getAddonsName();
+            boolean isAddonEnabled = !addonName.equalsIgnoreCase("No Thanks");
+            HBox addonsQuantityBox = createQuantityControls(addonName, item.getAddonsQuantity(), isAddonEnabled);
+            centerSection.getChildren().add(addonsQuantityBox);
+        }
 
         // Price
         Text priceText = new Text(item.getTotalPrice());
@@ -138,67 +121,77 @@ public class CartController {
         // Add all components to container
         container.getChildren().addAll(foodImage, centerSection, spacer, priceText, removeBtn);
 
-        // Event handlers
-        decreaseBtn.setOnAction(e -> updateQuantity(quantityText, -1, item));
-        increaseBtn.setOnAction(e -> updateQuantity(quantityText, 1, item));
+        // Event handlers for remove button
         removeBtn.setOnAction(e -> removeItem(container, item));
 
         return container;
     }
 
-    private List<OrderItem> fetchOrderItems(int orderId) {
-        List<OrderItem> orderItems = new ArrayList<>();
+    private HBox createQuantityControls(String label, int quantity, Boolean isEnabled) {
+        HBox quantityBox = new HBox(10);
+        quantityBox.setAlignment(Pos.CENTER_LEFT);
 
-        // JDBC connection setup (replace with your own credentials)
-        String url = "jdbc:mysql://localhost:3306/yourdb"; // Your database URL
-        String username = "root";  // Your database username
-        String password = "password";  // Your database password
+        Text quantityLabel = new Text(label);
+        quantityLabel.setStyle("-fx-font-size: 14px;");
 
-        // SQL query to get the order items, drinks, and addons for a specific order
-        String query = "SELECT oi.product_id, oi.quantity, p.product_name, p.price, " +
-                "d.drink_name, d.quantity AS drink_qty, " +
-                "a.addon_name, a.quantity AS addon_qty " +
-                "FROM order_items oi " +
-                "JOIN products p ON oi.product_id = p.id " +
-                "LEFT JOIN drinks d ON oi.order_item_id = d.order_item_id " +
-                "LEFT JOIN addons a ON oi.order_item_id = a.order_item_id " +
-                "WHERE oi.order_id = ?";
+        HBox controlsBox = new HBox(5);
+        controlsBox.setAlignment(Pos.CENTER_LEFT);
 
-        try (Connection connection = DriverManager.getConnection('url', 'username', 'password');
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+        Button decreaseBtn = new Button("-");
+        Text quantityText = new Text(String.valueOf(quantity));
+        Button increaseBtn = new Button("+");
 
-            stmt.setInt(1, orderId);  // Set the orderId parameter
-            ResultSet rs = stmt.executeQuery();
+        // Style the quantity controls
+        String buttonStyle = "-fx-background-color: white; -fx-border-color: #DB383D; " +
+                "-fx-text-fill: #DB383D; -fx-border-radius: 5; " +
+                "-fx-min-width: 30; -fx-min-height: 30; -fx-cursor: hand;";
+        decreaseBtn.setStyle(buttonStyle);
+        increaseBtn.setStyle(buttonStyle);
+        quantityText.setStyle("-fx-font-size: 14px;");
 
-            while (rs.next()) {
-                // Create lists for addons and their quantities
-                List<String> addonNames = new ArrayList<>();
-                List<Integer> addonQuantities = new ArrayList<>();
-                if (rs.getString("addon_name") != null) {
-                    addonNames.add(rs.getString("addon_name"));
-                    addonQuantities.add(rs.getInt("addon_qty"));
-                }
-
-                // Create the OrderItem from the result set
-                OrderItem item = new OrderItem(
-                        rs.getInt("product_id"),
-                        rs.getString("product_name"),
-                        rs.getInt("quantity"),
-                        rs.getDouble("price"),
-                        rs.getString("drink_name"),
-                        rs.getInt("drink_qty"),
-                        addonNames,
-                        addonQuantities
-                );
-                orderItems.add(item);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+        // Disable or enable the controls based on the `isEnabled` parameter
+        if (isEnabled != null && !isEnabled) {
+            decreaseBtn.setDisable(true);
+            increaseBtn.setDisable(true);
+            quantityText.setDisable(true);  // Optional: Disable the quantity display as well
         }
 
-        return orderItems;
+        // Add controls to the controls box
+        controlsBox.getChildren().addAll(decreaseBtn, quantityText, increaseBtn);
+
+        // Add label and controls to quantity box
+        quantityBox.getChildren().addAll(quantityLabel, controlsBox);
+
+        // Event handlers for quantity buttons
+        decreaseBtn.setOnAction(e -> updateQuantity(quantityText, -1, label));
+        increaseBtn.setOnAction(e -> updateQuantity(quantityText, 1, label));
+
+        return quantityBox;
     }
+
+    private void updateQuantity(Text quantityText, int change, String label) {
+        int currentQuantity = Integer.parseInt(quantityText.getText());
+        int newQuantity = currentQuantity + change;
+
+        // Prevent negative quantities
+        if (newQuantity >= 0) {
+            quantityText.setText(String.valueOf(newQuantity));
+
+            // Update the corresponding OrderItem's quantity based on label
+            switch (label) {
+                case "Pizza Quantity:":
+                    // Update pizza quantity
+                    break;
+                case "Drink Quantity:":
+                    // Update drink quantity
+                    break;
+                case "Addons Quantity:":
+                    // Update addons quantity
+                    break;
+            }
+        }
+    }
+
 
     private String getFoodCode(String pizzaName) {
         // Map meal names to their corresponding codes

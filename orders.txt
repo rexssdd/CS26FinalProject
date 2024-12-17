@@ -2,3 +2,22 @@
   Total Price: 308.0
   Status: Pending
 
+0022: Order Items
+  Order Type: Dine In
+  Bundle Code: null
+  Pizza Name: Hawaian Pizza
+  Quantity: 1
+  Drink Name: Coke
+  Quantity: 1
+  Add-Ons: No Thanks
+Add-Ons Quantity: 0  Price: ₱ 249.00
+  Bundle Code: null
+  Pizza Name: Deluxe Pizza
+  Quantity: 1
+  Drink Name: Coke
+  Quantity: 1
+  Add-Ons: Pepperoni
+Add-Ons Quantity: 1  Price: ₱ 308.00
+  Total Price: 557.00
+  Status: Pending
+
