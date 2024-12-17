@@ -19,10 +19,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 
 
@@ -124,7 +121,7 @@ public class AdminMainController {
 //        orderStatusColumn.setCellValueFactory(cellData -> cellData.getValue().orderStatusProperty());
 //        // Set up the order details columns
 
-        OrderNum.setCellValueFactory(cellData -> cellData.getValue().foodCodeProperty());
+        OrderNum.setCellValueFactory(cellData -> cellData.getValue().orderNumberProperty());
         PizzaName.setCellValueFactory(cellData -> cellData.getValue().pizzaNameProperty());
         TotalPrice.setCellValueFactory(cellData -> cellData.getValue().pizzaPriceProperty());
         PizzaQuantity.setCellValueFactory(cellData -> cellData.getValue().pizzaquantityProperty().asObject());
@@ -387,7 +384,7 @@ public class AdminMainController {
                     // Write items and restore original stack
                     while (!tempStack.isEmpty()) {
                         OrderItem item = tempStack.pop();
-                        writer.write("  Food Code: " + item.getFoodCode() + "\n");
+                        writer.write("  Food Code: " + item.getOrderNumber() + "\n");
                         writer.write("  Pizza Name: " + item.getPizzaName() + "\n");
                         writer.write("  Quantity: " + item.getPizzaQuantity() + "\n");
                         writer.write("  Drink Name:" + item.getDrinkName() + "\n");
@@ -416,6 +413,48 @@ public class AdminMainController {
         }
     }
 
+
+    private List<OrderItem> fetchOrderItems(String orderNumber) {
+        List<OrderItem> orderItems = new ArrayList<>();
+        String query = "SELECT oi.quantity, oi.drinks, oi.drinksquantity, oi.addons, oi.AddonsQuantity, oi.price, " +
+                "p.product_name AS pizzaName " +
+                "FROM order_items oi " +
+                "JOIN orders o ON oi.order_id = o.id " +
+                "JOIN products p ON oi.product_id = p.id " +
+                "WHERE o.order_number = ?";
+
+        try (Connection conn = Database.connectDB(); // Get connection from Database class
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, orderNumber); // Set the orderNumber parameter in the query
+            ResultSet rs = stmt.executeQuery();
+
+            // Iterate through the result set and populate the list of OrderItem objects
+            while (rs.next()) {
+                // Format the price as a string
+                String formattedPrice = String.format("%.2f", rs.getDouble("price"));
+
+                // Construct the OrderItem object
+                OrderItem item = new OrderItem(
+                        rs.getString("pizzaName"),       // pizzaName
+                        rs.getInt("quantity"),          // pizzaQuantity
+                        rs.getString("drinks"),         // drinkName
+                        rs.getInt("drinksQuantity"),    // drinkQuantity
+                        rs.getString("addons"),         // addonsName
+                        rs.getInt("AddonsQuantity"),    // addonsQuantity
+                        formattedPrice,                 // totalPrice (formatted)
+                        ""                              // foodCode (optional; use default or leave empty)
+                );
+
+                orderItems.add(item);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Print stack trace to debug any SQL issues
+        }
+        return orderItems; // Return the list of OrderItem objects
+    }
+
+
     @FXML
     private void handleOrderNumberInput() {
         String orderNumber = OrderNumberInput.getText().trim();
@@ -425,28 +464,10 @@ public class AdminMainController {
             return;
         }
 
-        Stack<OrderItem> orderStack = orderStacks.get(orderNumber);
-        if (orderStack != null && OrdersTable != null) {
-            // Convert stack to ObservableList while maintaining order
-            ObservableList<OrderItem> orderItems = FXCollections.observableArrayList();
-            Stack<OrderItem> tempStack = new Stack<>();
-
-            // Reverse the stack to display items in original order
-            while (!orderStack.isEmpty()) {
-                tempStack.push(orderStack.pop());
-            }
-
-            // Add items to observable list and restore the original stack
-            while (!tempStack.isEmpty()) {
-                OrderItem item = tempStack.pop();
-                orderItems.add(item);
-                orderStack.push(item);
-            }
-
-            OrdersTable.setItems(orderItems);
-
-            // Now that we've loaded the order items into the OrdersTable, update the total price
-            updateTotalPrice();
+        List<OrderItem> orderItems = fetchOrderItems(orderNumber);
+        if (!orderItems.isEmpty()) {
+            OrdersTable.setItems(FXCollections.observableArrayList(orderItems));
+            updateTotalPrice(); // Ensure it calculates correctly
         } else {
             showAlert("Information", "No items found for order number: " + orderNumber);
         }

@@ -1,0 +1,17 @@
+Pizzify
+Order Receipt
+Order Number: 0012
+Order Type: Dine In
+======================================
+
+PizzaName: : Deluxe Pizza
+Quantity: 1
+DrinkName: Coke
+DrinkQuantity: 0
+AddonsName: 
+AddonsQuantity: 0
+TotalPrice: 249.0
+======================================
+Total: ₱249.00
+Amount Paid: ₱250.00
+Change: ₱1.00

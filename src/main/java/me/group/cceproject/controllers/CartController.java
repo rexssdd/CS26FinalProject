@@ -19,6 +19,11 @@ import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class CartController {
@@ -69,7 +74,7 @@ public class CartController {
         // Food Image
         ImageView foodImage = new ImageView();
         try {
-            String imagePath = "/me/group/cceproject/images/" +item.getFoodCode()+ ".png";
+            String imagePath = "/me/group/cceproject/images/" + item.getProductId() + ".png";  // Changed from item.getOrderNumber() to item.getProductId()
             Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
             foodImage.setImage(image);
             foodImage.setFitWidth(80);
@@ -139,6 +144,60 @@ public class CartController {
         removeBtn.setOnAction(e -> removeItem(container, item));
 
         return container;
+    }
+
+    private List<OrderItem> fetchOrderItems(int orderId) {
+        List<OrderItem> orderItems = new ArrayList<>();
+
+        // JDBC connection setup (replace with your own credentials)
+        String url = "jdbc:mysql://localhost:3306/yourdb"; // Your database URL
+        String username = "root";  // Your database username
+        String password = "password";  // Your database password
+
+        // SQL query to get the order items, drinks, and addons for a specific order
+        String query = "SELECT oi.product_id, oi.quantity, p.product_name, p.price, " +
+                "d.drink_name, d.quantity AS drink_qty, " +
+                "a.addon_name, a.quantity AS addon_qty " +
+                "FROM order_items oi " +
+                "JOIN products p ON oi.product_id = p.id " +
+                "LEFT JOIN drinks d ON oi.order_item_id = d.order_item_id " +
+                "LEFT JOIN addons a ON oi.order_item_id = a.order_item_id " +
+                "WHERE oi.order_id = ?";
+
+        try (Connection connection = DriverManager.getConnection('url', 'username', 'password');
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setInt(1, orderId);  // Set the orderId parameter
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                // Create lists for addons and their quantities
+                List<String> addonNames = new ArrayList<>();
+                List<Integer> addonQuantities = new ArrayList<>();
+                if (rs.getString("addon_name") != null) {
+                    addonNames.add(rs.getString("addon_name"));
+                    addonQuantities.add(rs.getInt("addon_qty"));
+                }
+
+                // Create the OrderItem from the result set
+                OrderItem item = new OrderItem(
+                        rs.getInt("product_id"),
+                        rs.getString("product_name"),
+                        rs.getInt("quantity"),
+                        rs.getDouble("price"),
+                        rs.getString("drink_name"),
+                        rs.getInt("drink_qty"),
+                        addonNames,
+                        addonQuantities
+                );
+                orderItems.add(item);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return orderItems;
     }
 
     private String getFoodCode(String pizzaName) {

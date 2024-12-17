@@ -1,0 +1,10 @@
+Pizzify
+Order Receipt
+Order Number: 0002
+Order Type: null
+======================================
+Pizza                Qty      Drink                Qty      Addon                Qty      Total Price: Deluxe Pizza       1        Coke                 0                             0        199.00  
+======================================
+Total: ₱199.00
+Amount Paid: ₱200.00
+Change: ₱1.00

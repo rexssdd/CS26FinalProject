@@ -18,6 +18,7 @@ public class Database {
 //            showAlert("Error", "Failed to connect to the database: " + e.getMessage());
             return null;
         }
+
     }
 }
 

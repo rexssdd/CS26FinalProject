@@ -1,12 +1,4 @@
 0021: Order Items
-  Food Code: e: null
-  Pizza Name: : Pepperoni Pizza
-  Quantity: 1
-  Drink Name:Coke
-  Drink Qty:0
-  Addons:
-  AddonsQty:0
-  Price: 
   Total Price: 308.0
-  Status: In Progress
+  Status: Pending
 
